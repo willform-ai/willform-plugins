@@ -1,0 +1,12 @@
+# Local config with API keys
+*.local.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~

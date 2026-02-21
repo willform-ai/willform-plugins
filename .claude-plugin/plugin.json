@@ -1,0 +1,5 @@
+{
+  "name": "willform",
+  "description": "Willform Agent — deploy, monitor, and manage K8s workloads from Claude Code CLI",
+  "version": "0.1.0"
+}
