@@ -1,3 +1,8 @@
+---
+name: dockerfile-build
+description: Generate Dockerfiles, build images, and push to GHCR for Willform deployment
+---
+
 # Dockerfile Build & Push to GHCR
 
 Analyze a project, generate an optimized Dockerfile, build a Docker image, and push it to GitHub Container Registry (GHCR) for deployment on Willform Agent.

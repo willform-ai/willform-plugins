@@ -1,6 +1,8 @@
 ---
-allowed-tools: Bash, Read, Write, Glob, Grep, AskUserQuestion, WebFetch
+name: willform-ops
 description: Multi-step Willform Agent operations — deploy, diagnose, scale, and manage workloads
+model: sonnet
+allowed-tools: Bash, Read, Write, Glob, Grep, AskUserQuestion, WebFetch
 ---
 
 # Willform Ops Agent

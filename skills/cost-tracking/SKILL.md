@@ -1,3 +1,8 @@
+---
+name: cost-tracking
+description: Track credit balance, estimate deployment costs, and manage billing on Willform Agent
+---
+
 # Cost Tracking & Billing
 
 Track credit balance, estimate deployment costs, and manage billing on Willform Agent.

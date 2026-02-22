@@ -1,3 +1,8 @@
+---
+name: deploy-monitoring
+description: Monitor deployment health, retrieve logs, and diagnose issues on Willform Agent
+---
+
 # Deploy Monitoring
 
 Monitor deployment health, retrieve logs, and diagnose issues on Willform Agent.

@@ -1,11 +1,11 @@
 {
   "hooks": [
     {
-      "matcher": "SessionStart",
+      "matcher": "Notification",
       "hooks": [
         {
           "type": "command",
-          "command": "bash hooks/scripts/load-willform-context.sh"
+          "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/load-willform-context.sh"
         }
       ]
     }

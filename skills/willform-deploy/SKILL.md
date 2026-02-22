@@ -1,3 +1,8 @@
+---
+name: willform-deploy
+description: Deploy containers to Kubernetes via Willform Agent REST API
+---
+
 # Willform Deploy Skill
 
 Deploy containers to Kubernetes via the Willform Agent REST API.
