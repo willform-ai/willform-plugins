@@ -40,9 +40,11 @@ alpine/openclaw:2026.2.13
 
 ```bash
 source scripts/wf-api.sh && wf_load_config
-RESULT=$(wf_post "/api/namespaces" '{"name":"my-agent-ns"}')
+RESULT=$(wf_post "/api/namespaces" '{"name":"my-agent-ns","allocatedCores":2,"allocatedMemoryGb":4}')
 NAMESPACE_ID=$(wf_json_field "$RESULT" "data.id")
 ```
+
+OpenClaw requires 2 CPU cores and 4GB memory, so allocate at least that much.
 
 ### 2. Deploy OpenClaw
 

@@ -26,9 +26,11 @@ source scripts/wf-api.sh && wf_load_config
 Every deployment lives inside a namespace. Create one first:
 
 ```bash
-RESULT=$(wf_post "/api/namespaces" '{"name":"my-project"}')
+RESULT=$(wf_post "/api/namespaces" '{"name":"my-project","allocatedCores":1,"allocatedMemoryGb":2}')
 NAMESPACE_ID=$(wf_json_field "$RESULT" "data.id")
 ```
+
+`allocatedCores` (1-32) and `allocatedMemoryGb` (1-128) are required. These set the K8s ResourceQuota and determine billing.
 
 ### Step 2: Deploy
 

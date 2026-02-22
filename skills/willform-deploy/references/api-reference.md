@@ -14,21 +14,23 @@ Create a new namespace.
 
 ```
 Auth: Bearer wf_sk_*
-Body: { "name": "string" }
+Body: {
+  "name": "string (required)",
+  "allocatedCores": "number (required, 1-32)",
+  "allocatedMemoryGb": "number (required, 1-128)"
+}
 Response: {
   "success": true,
   "data": {
     "id": "uuid",
     "shortId": "string",
-    "name": "string",
-    "status": "active",
-    "cpuCores": 4,
-    "memoryGb": 8,
-    "createdAt": "ISO8601"
+    "k8sNamespace": "string",
+    "allocatedMemoryGb": 8
   }
 }
 ```
 
+Note: create response is minimal. Use `GET /api/namespaces/{id}` for full details.
 Returns 409 if a namespace with the same name already exists for this user.
 
 ### GET /api/namespaces
@@ -72,10 +74,14 @@ Update namespace settings.
 
 ```
 Auth: Bearer wf_sk_*
-Body: { "name?": "string", "cpuCores?": "number", "memoryGb?": "number" }
+Body: {
+  "name?": "string",
+  "allocatedCores?": "number (1-32)",
+  "allocatedMemoryGb?": "number (1-128)"
+}
 Response: {
   "success": true,
-  "data": { "id": "uuid", "name": "string", "cpuCores": 4, "memoryGb": 8 }
+  "data": { "id": "uuid", "name": "string", "allocatedCores": 4, "allocatedMemoryGb": 8 }
 }
 ```
 
@@ -253,10 +259,17 @@ Response: {
   "success": true,
   "data": {
     "balance": "string (numeric, e.g. '42.50000000')",
-    "currency": "USD"
+    "currency": "USD",
+    "rates": {
+      "computePerSecond": "string",
+      "memoryPerSecond": "string",
+      "storagePerSecond": "string"
+    }
   }
 }
 ```
+
+The `rates` field shows current per-second burn rates across all running deployments.
 
 ### GET /api/credits/transactions
 

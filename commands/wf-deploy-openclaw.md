@@ -62,12 +62,14 @@ Use AskUserQuestion for each. Skip items already filled by the soul preset (but 
 ### 4. Create namespace (if needed)
 
 ```bash
-RESULT=$(wf_post "/api/namespaces" "{\"name\":\"${NAMESPACE_NAME}\"}")
+RESULT=$(wf_post "/api/namespaces" "{\"name\":\"${NAMESPACE_NAME}\",\"allocatedCores\":2,\"allocatedMemoryGb\":4}")
 NAMESPACE_ID=$(wf_json_field "$RESULT" "data.id")
 SHORT_ID=$(wf_json_field "$RESULT" "data.shortId")
 ```
 
-If using an existing namespace, extract `NAMESPACE_ID` and `SHORT_ID` from the selected namespace.
+OpenClaw needs 2 cores / 4GB memory. `allocatedCores` and `allocatedMemoryGb` are required fields.
+
+If using an existing namespace, extract `NAMESPACE_ID` and `SHORT_ID` from the selected namespace. Verify the namespace has sufficient quota (at least 2 cores, 4GB memory).
 
 ### 5. Deploy OpenClaw
 
