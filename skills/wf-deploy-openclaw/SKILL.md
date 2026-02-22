@@ -25,7 +25,18 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/wf-api.sh" && wf_load_config
 
 If this fails, tell the user to run `/wf-setup` first and stop.
 
-### 2. Telegram Bot setup guide
+### 2. Check language preference
+
+After loading config, read `WF_LANGUAGE`. If it is empty or not set:
+
+1. Use AskUserQuestion to ask: "Which language do you prefer? / 어떤 언어로 진행할까요?"
+   - Options: "English (Recommended)" / "한국어"
+2. Save the choice to `~/.claude/willform-plugins.local.md` by appending `language: en` or `language: ko`
+3. Set `WF_LANGUAGE` accordingly
+
+Use the selected language for ALL subsequent output. See `skills/willform-deploy/references/language-guidelines.md` for conventions.
+
+### 3. Telegram Bot setup guide
 
 Show the user how to create a Telegram bot:
 
@@ -47,7 +58,7 @@ Also ask for the bot username (without @) — this is needed to generate the `ht
 
 If the user wants to skip Telegram integration, allow it — `TELEGRAM_BOT_TOKEN` is optional.
 
-### 3. Choose LLM provider
+### 4. Choose LLM provider
 
 Use AskUserQuestion to let the user pick their LLM provider:
 
@@ -56,7 +67,7 @@ Use AskUserQuestion to let the user pick their LLM provider:
 - **Anthropic** — Claude Sonnet, Claude Haiku. https://console.anthropic.com/settings/keys
 - **Google Gemini** — Gemini 2.0 Flash, Gemini 2.0 Pro. https://aistudio.google.com/apikey
 
-### 4. Collect API key
+### 5. Collect API key
 
 Show the key signup URL for the selected provider:
 
@@ -69,11 +80,11 @@ Show the key signup URL for the selected provider:
 
 Use AskUserQuestion to collect the key. Validate the prefix matches the selected provider.
 
-### 5. Choose soul (personality preset)
+### 6. Choose soul (role preset)
 
-Read the soul catalog from `skills/willform-deploy/references/openclaw-souls.md`.
+A "soul" defines the agent's role, expertise area, system prompt, and suggested model. Read the soul catalog from `skills/willform-deploy/references/openclaw-souls.md`.
 
-Use AskUserQuestion to let the user pick a soul:
+Use AskUserQuestion to let the user pick a soul. When displaying in Korean, describe soul as "역할 프리셋" (not "성격"):
 
 - **real-estate-expert** — Real estate investment analyst (market analysis, property valuation, ROI projections)
 - **stock-investment-expert** — Stock analyst (fundamental/technical analysis, portfolio management)
@@ -91,7 +102,7 @@ If user selects a preset soul:
 If user selects "custom":
 - Proceed with manual input (no pre-filled values)
 
-### 6. Gather user input
+### 7. Gather user input
 
 Use AskUserQuestion for each. Skip items already filled by the soul preset (but allow override):
 
@@ -111,7 +122,7 @@ Use AskUserQuestion for each. Skip items already filled by the soul preset (but 
    - If existing: list namespaces via `wf_get "/api/namespaces"` and let user pick
    - If new: ask for namespace name (default: same as agent name)
 
-### 7. Create namespace (if needed)
+### 8. Create namespace (if needed)
 
 ```bash
 RESULT=$(wf_post "/api/namespaces" "{\"name\":\"${NAMESPACE_NAME}\",\"allocatedCores\":2,\"allocatedMemoryGb\":4}")
@@ -123,7 +134,7 @@ OpenClaw needs 2 cores / 4GB memory. `allocatedCores` and `allocatedMemoryGb` ar
 
 If using an existing namespace, extract `NAMESPACE_ID` and `SHORT_ID` from the selected namespace. Verify the namespace has sufficient quota (at least 2 cores, 4GB memory).
 
-### 8. Deploy OpenClaw
+### 9. Deploy OpenClaw
 
 Build the env JSON with provider-specific key mapping:
 
@@ -168,14 +179,14 @@ DEPLOYMENT_ID=$(wf_json_field "$RESULT" "data.deploymentId")
 
 If the deploy call fails, show the error and stop.
 
-### 9. Expose default domain
+### 10. Expose default domain
 
 ```bash
 RESULT=$(wf_post "/api/deploy/${DEPLOYMENT_ID}/expose")
 DOMAIN=$(wf_json_field "$RESULT" "data.hostname")
 ```
 
-### 10. Poll for readiness
+### 11. Poll for readiness
 
 Poll `GET /api/deploy/{id}` every 5 seconds, max 120 seconds (24 attempts):
 
@@ -194,7 +205,7 @@ for i in $(seq 1 24); do
 done
 ```
 
-### 11. Report result
+### 12. Report result
 
 On success, display:
 

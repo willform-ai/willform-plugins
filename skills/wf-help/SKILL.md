@@ -94,7 +94,7 @@ Willform Agent — Kubernetes 배포 CLI 플러그인
 
 배포:
   /wf-deploy-openclaw    Telegram 봇 + AI 에이전트 배포
-                         Telegram 설정 → LLM 선택 → soul 프리셋
+                         Telegram 설정 → LLM 선택 → soul 역할 선택
                          → 배포까지 안내합니다.
   /wf-build-push         Docker 이미지 빌드 및 GHCR 푸시
 
@@ -109,7 +109,7 @@ Willform Agent — Kubernetes 배포 CLI 플러그인
 빠른 시작:
   1. /wf-setup                Willform API 키 설정
   2. /wf-deploy-openclaw      AI 에이전트 배포 (Telegram 봇 + LLM 키
-                              + soul 선택까지 안내)
+                              + soul 역할 선택까지 안내)
   3. https://t.me/봇_username 에서 에이전트와 대화
   4. /wf-status               실행 상태 확인
   5. /wf-cost                 비용 확인
