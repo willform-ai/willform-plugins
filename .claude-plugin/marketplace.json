@@ -1,0 +1,20 @@
+{
+  "name": "willform-plugins",
+  "owner": {
+    "name": "Willform",
+    "email": "support@willform.ai"
+  },
+  "metadata": {
+    "description": "Official Willform Agent plugins for Claude Code"
+  },
+  "plugins": [
+    {
+      "name": "willform",
+      "source": "./",
+      "description": "Deploy, monitor, and manage K8s workloads on Willform Agent from Claude Code",
+      "version": "0.1.0",
+      "category": "infrastructure",
+      "tags": ["kubernetes", "deployment", "cloud", "ai-agent"]
+    }
+  ]
+}

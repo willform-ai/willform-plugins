@@ -4,11 +4,14 @@ Claude Code plugin for [Willform Agent](https://agent.willform.ai) — deploy, m
 
 ## Install
 
-```bash
-claude install-plugin willform-ai/willform-plugins
+Add the marketplace and install the plugin:
+
+```
+/plugin marketplace add willform-ai/willform-plugins
+/plugin install willform@willform-plugins
 ```
 
-Or clone and use directly:
+Or use directly from a local clone:
 
 ```bash
 git clone https://github.com/willform-ai/willform-plugins.git
@@ -75,16 +78,6 @@ All commands support English and Korean. Set your preference during `/wf-setup` 
 ```
 language: en   # or ko
 ```
-
-## Pricing
-
-| Resource | Rate |
-|----------|------|
-| Compute | $0.04/core/hr |
-| Memory | $0.005/GB/hr |
-| Storage | $0.0001/GB/hr |
-
-Per-second billing. Namespace suspended at balance <= $0.01.
 
 ## License
 

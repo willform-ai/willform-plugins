@@ -1,5 +1,13 @@
 {
   "name": "willform",
-  "description": "Willform Agent — deploy, monitor, and manage K8s workloads from Claude Code CLI",
-  "version": "0.1.0"
+  "description": "Deploy, monitor, and manage K8s workloads on Willform Agent from Claude Code",
+  "version": "0.1.0",
+  "author": {
+    "name": "Willform",
+    "email": "support@willform.ai"
+  },
+  "homepage": "https://agent.willform.ai",
+  "repository": "https://github.com/willform-ai/willform-plugins",
+  "license": "MIT",
+  "keywords": ["kubernetes", "deployment", "cloud", "ai-agent", "willform"]
 }
