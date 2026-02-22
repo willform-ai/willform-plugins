@@ -13,7 +13,7 @@ Before showing help content, check the language preference:
 
 1. Source the config:
 ```bash
-source scripts/wf-api.sh && wf_load_config 2>/dev/null
+source "${CLAUDE_PLUGIN_ROOT}/scripts/wf-api.sh" && wf_load_config 2>/dev/null
 ```
 
 2. Read `WF_LANGUAGE` from the loaded config. If empty or not set, use AskUserQuestion:
@@ -32,12 +32,19 @@ Display the following guide in the user's preferred language.
 ```
 Willform Agent — CLI Plugin for Kubernetes Deployment
 
+What You Need:
+  1. Willform API key     → Run /wf-setup to configure
+  2. Telegram bot token   → Create via @BotFather in Telegram
+  3. LLM API key          → From OpenRouter, OpenAI, Anthropic, or Google
+
 Getting Started:
   /wf-setup              Configure API key and base URL
   /wf-help               Show this guide
 
 Deploy:
-  /wf-deploy-openclaw    Deploy an OpenClaw AI agent (with soul presets)
+  /wf-deploy-openclaw    Deploy an OpenClaw AI agent with Telegram bot
+                         Guides you through: Telegram setup → LLM provider
+                         → soul preset → deploy. No prior setup needed.
   /wf-build-push         Build Docker image and push to GHCR
 
 Monitor:
@@ -49,10 +56,18 @@ Billing:
   /wf-cost               Credit balance and burn rate estimate
 
 Quick Start:
-  1. /wf-setup            Set your API key
-  2. /wf-deploy-openclaw  Deploy an AI agent
-  3. /wf-status           Verify it's running
-  4. /wf-cost             Check your spending
+  1. /wf-setup                Set your Willform API key
+  2. /wf-deploy-openclaw      Deploy an AI agent (walks you through
+                              Telegram bot + LLM key + soul selection)
+  3. Open https://t.me/your_bot_username to chat with your agent
+  4. /wf-status               Verify it's running
+  5. /wf-cost                 Check your spending
+
+Supported LLM Providers:
+  OpenRouter (Recommended)  All models with one key — openrouter.ai/keys
+  OpenAI                    GPT-4o, GPT-4o-mini — platform.openai.com/api-keys
+  Anthropic                 Claude Sonnet, Haiku — console.anthropic.com/settings/keys
+  Google Gemini             Gemini 2.0 Flash/Pro — aistudio.google.com/apikey
 
 Pricing:
   Compute  $0.04/core/hr
@@ -68,12 +83,19 @@ Docs:     https://agent.willform.ai/docs
 ```
 Willform Agent — Kubernetes 배포 CLI 플러그인
 
+준비물:
+  1. Willform API 키     → /wf-setup 으로 설정
+  2. Telegram 봇 토큰    → Telegram에서 @BotFather로 생성
+  3. LLM API 키          → OpenRouter, OpenAI, Anthropic, Google 중 택 1
+
 시작하기:
   /wf-setup              API 키 및 기본 URL 설정
   /wf-help               이 가이드 표시
 
 배포:
-  /wf-deploy-openclaw    OpenClaw AI 에이전트 배포 (soul 프리셋 지원)
+  /wf-deploy-openclaw    Telegram 봇 + AI 에이전트 배포
+                         Telegram 설정 → LLM 선택 → soul 프리셋
+                         → 배포까지 안내합니다.
   /wf-build-push         Docker 이미지 빌드 및 GHCR 푸시
 
 모니터링:
@@ -85,10 +107,18 @@ Willform Agent — Kubernetes 배포 CLI 플러그인
   /wf-cost               크레딧 잔액 및 소비율 예측
 
 빠른 시작:
-  1. /wf-setup            API 키 설정
-  2. /wf-deploy-openclaw  AI 에이전트 배포
-  3. /wf-status           실행 상태 확인
-  4. /wf-cost             비용 확인
+  1. /wf-setup                Willform API 키 설정
+  2. /wf-deploy-openclaw      AI 에이전트 배포 (Telegram 봇 + LLM 키
+                              + soul 선택까지 안내)
+  3. https://t.me/봇_username 에서 에이전트와 대화
+  4. /wf-status               실행 상태 확인
+  5. /wf-cost                 비용 확인
+
+지원 LLM 프로바이더:
+  OpenRouter (추천)       모든 모델 하나의 키로 — openrouter.ai/keys
+  OpenAI                  GPT-4o, GPT-4o-mini — platform.openai.com/api-keys
+  Anthropic               Claude Sonnet, Haiku — console.anthropic.com/settings/keys
+  Google Gemini           Gemini 2.0 Flash/Pro — aistudio.google.com/apikey
 
 요금:
   컴퓨팅   $0.04/코어/시간

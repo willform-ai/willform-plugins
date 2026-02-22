@@ -36,7 +36,11 @@ When analyzing properties:
 You are objective and conservative by default. You prioritize capital preservation over aggressive returns. Always disclose that you are an AI and not a licensed financial advisor.
 ```
 
-**Suggested model**: claude-sonnet-4-20250514
+**Suggested models**:
+- OpenRouter: `anthropic/claude-sonnet-4-20250514`
+- OpenAI: `gpt-4o`
+- Anthropic: `claude-sonnet-4-20250514`
+- Google: `gemini-2.0-flash`
 
 ---
 
@@ -72,7 +76,11 @@ Risk management rules:
 You are analytical and balanced. You present evidence before conclusions. Always disclose that you are an AI and not a licensed financial advisor. Past performance does not guarantee future results.
 ```
 
-**Suggested model**: claude-sonnet-4-20250514
+**Suggested models**:
+- OpenRouter: `anthropic/claude-sonnet-4-20250514`
+- OpenAI: `gpt-4o`
+- Anthropic: `claude-sonnet-4-20250514`
+- Google: `gemini-2.0-flash`
 
 ---
 
@@ -102,7 +110,11 @@ When reviewing documents:
 You are thorough, precise, and cautious. Use legal terminology correctly but explain it in plain language. Always note jurisdiction limitations. Always disclose that you are an AI and not a licensed attorney — your analysis is informational, not legal advice. Recommend consulting a qualified attorney for binding decisions.
 ```
 
-**Suggested model**: claude-sonnet-4-20250514
+**Suggested models**:
+- OpenRouter: `anthropic/claude-sonnet-4-20250514`
+- OpenAI: `gpt-4o`
+- Anthropic: `claude-sonnet-4-20250514`
+- Google: `gemini-2.0-flash`
 
 ---
 
@@ -139,7 +151,11 @@ When helping with code:
 You are patient, encouraging, and honest. If someone's approach has flaws, explain why constructively. Never write entire solutions unprompted — guide the learner to discover the answer. Adapt your explanation depth to the learner's level.
 ```
 
-**Suggested model**: claude-haiku-4.5 (faster responses for interactive learning)
+**Suggested models** (fast model preferred for interactive learning):
+- OpenRouter: `anthropic/claude-haiku-4.5`
+- OpenAI: `gpt-4o-mini`
+- Anthropic: `claude-haiku-4.5`
+- Google: `gemini-2.0-flash`
 
 ---
 
@@ -176,7 +192,11 @@ Communication rules:
 You are rigorous and skeptical. Question data quality before trusting results. Flag statistical significance (or lack thereof). Prefer simple explanations that match the data over complex theories.
 ```
 
-**Suggested model**: claude-sonnet-4-20250514
+**Suggested models**:
+- OpenRouter: `anthropic/claude-sonnet-4-20250514`
+- OpenAI: `gpt-4o`
+- Anthropic: `claude-sonnet-4-20250514`
+- Google: `gemini-2.0-flash`
 
 ---
 
@@ -213,7 +233,11 @@ Editing principles:
 You are direct and constructive. Praise specific strengths, then identify the most impactful improvements. Limit feedback to the top 3-5 issues per review — don't overwhelm. Adapt your feedback depth to whether the draft is early or polished.
 ```
 
-**Suggested model**: claude-haiku-4.5 (fast iteration for writing feedback loops)
+**Suggested models** (fast model preferred for writing feedback loops):
+- OpenRouter: `anthropic/claude-haiku-4.5`
+- OpenAI: `gpt-4o-mini`
+- Anthropic: `claude-haiku-4.5`
+- Google: `gemini-2.0-flash`
 
 ---
 

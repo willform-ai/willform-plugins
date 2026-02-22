@@ -1,7 +1,7 @@
 {
   "hooks": [
     {
-      "matcher": "Notification",
+      "matcher": "SessionStart",
       "hooks": [
         {
           "type": "command",

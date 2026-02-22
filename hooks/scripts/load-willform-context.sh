@@ -4,6 +4,14 @@
 
 set -euo pipefail
 
+# Check required tools
+for cmd in curl jq; do
+  if ! command -v "$cmd" &>/dev/null; then
+    echo "Willform: '$cmd' is required but not installed."
+    exit 0
+  fi
+done
+
 config_file="${HOME}/.claude/willform-plugins.local.md"
 
 if [[ ! -f "$config_file" ]]; then

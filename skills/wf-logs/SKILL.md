@@ -20,7 +20,7 @@ A deployment ID or name must be provided as an argument (`$ARGUMENTS`). If no ar
 1. Source the API helper and load config:
 
 ```bash
-source scripts/wf-api.sh && wf_load_config
+source "${CLAUDE_PLUGIN_ROOT}/scripts/wf-api.sh" && wf_load_config
 ```
 
 2. **Resolve deployment ID**:

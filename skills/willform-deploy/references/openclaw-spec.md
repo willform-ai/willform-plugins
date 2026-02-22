@@ -16,18 +16,29 @@ alpine/openclaw:2026.2.13
 
 ## Required Environment Variables
 
+One LLM API key is required. Use exactly one of the following:
+
+| Variable            | Provider    | Example                       |
+|---------------------|-------------|-------------------------------|
+| `OPENROUTER_API_KEY`| OpenRouter  | `sk-or-v1-...`                |
+| `OPENAI_API_KEY`    | OpenAI      | `sk-...`                      |
+| `ANTHROPIC_API_KEY` | Anthropic   | `sk-ant-...`                  |
+| `GOOGLE_API_KEY`    | Google Gemini | `AIza...`                   |
+
+Plus these required fields:
+
 | Variable            | Description          | Example                       |
 |---------------------|----------------------|-------------------------------|
-| `OPENROUTER_API_KEY`| LLM API key          | `sk-or-v1-...`                |
 | `AGENT_MODEL`       | Model name           | `claude-sonnet-4-20250514`    |
 | `AGENT_NAME`        | Display name         | `my-agent`                    |
 
 ## Optional Environment Variables
 
-| Variable              | Description            | Default |
-|-----------------------|------------------------|---------|
-| `AGENT_DESCRIPTION`   | Agent description      | —       |
-| `AGENT_SYSTEM_PROMPT`  | Custom system prompt   | —       |
+| Variable              | Description                        | Default |
+|-----------------------|------------------------------------|---------|
+| `TELEGRAM_BOT_TOKEN`  | Telegram bot token from @BotFather | —       |
+| `AGENT_DESCRIPTION`   | Agent description                  | —       |
+| `AGENT_SYSTEM_PROMPT`  | Custom system prompt               | —       |
 
 ## Resources
 
@@ -39,7 +50,7 @@ alpine/openclaw:2026.2.13
 ### 1. Create namespace
 
 ```bash
-source scripts/wf-api.sh && wf_load_config
+source "${CLAUDE_PLUGIN_ROOT}/scripts/wf-api.sh" && wf_load_config
 RESULT=$(wf_post "/api/namespaces" '{"name":"my-agent-ns","allocatedCores":2,"allocatedMemoryGb":4}')
 NAMESPACE_ID=$(wf_json_field "$RESULT" "data.id")
 ```
@@ -107,9 +118,10 @@ curl -s "https://${DOMAIN}/health"
   "chartType": "web",
   "port": 18789,
   "env": {
-    "OPENROUTER_API_KEY": "<your-key>",
+    "OPENROUTER_API_KEY": "<your-key (or use OPENAI_API_KEY / ANTHROPIC_API_KEY / GOOGLE_API_KEY)>",
     "AGENT_MODEL": "claude-sonnet-4-20250514",
     "AGENT_NAME": "my-agent",
+    "TELEGRAM_BOT_TOKEN": "Optional — Telegram bot token",
     "AGENT_DESCRIPTION": "Optional description",
     "AGENT_SYSTEM_PROMPT": "Optional system prompt"
   }

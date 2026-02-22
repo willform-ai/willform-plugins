@@ -127,7 +127,7 @@ USDC and USDT accepted on 6 chains:
 
 ## Usage
 
-Use the `source scripts/wf-api.sh && wf_load_config` pattern to set up authentication before making API calls.
+Use the `source "${CLAUDE_PLUGIN_ROOT}/scripts/wf-api.sh" && wf_load_config` pattern to set up authentication before making API calls.
 
 ## Warning
 

@@ -11,7 +11,7 @@ Monitor deployment health, retrieve logs, and diagnose issues on Willform Agent.
 
 This skill helps you check the status of deployments running on Willform Agent (https://agent.willform.ai), retrieve container logs, and troubleshoot common deployment problems.
 
-All API calls require a `wf_sk_*` API key in the Bearer header. Use `source scripts/wf-api.sh && wf_load_config` to set up authenticated API calls.
+All API calls require a `wf_sk_*` API key in the Bearer header. Use `source "${CLAUDE_PLUGIN_ROOT}/scripts/wf-api.sh" && wf_load_config` to set up authenticated API calls.
 
 All API responses are wrapped in `{ success: boolean, data?: T, error?: string }`.
 

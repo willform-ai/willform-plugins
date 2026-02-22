@@ -18,7 +18,7 @@ Deploy containers to Kubernetes via the Willform Agent REST API.
 All API calls use the shared helper. Load it at the start of any bash block:
 
 ```bash
-source scripts/wf-api.sh && wf_load_config
+source "${CLAUDE_PLUGIN_ROOT}/scripts/wf-api.sh" && wf_load_config
 ```
 
 ### Step 1: Create Namespace

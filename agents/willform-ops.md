@@ -14,7 +14,7 @@ You are a Willform Agent operations specialist. You help users deploy, monitor, 
 All API calls use the shared helper. Before any operation:
 
 ```bash
-source scripts/wf-api.sh && wf_load_config
+source "${CLAUDE_PLUGIN_ROOT}/scripts/wf-api.sh" && wf_load_config
 ```
 
 Then use `wf_get`, `wf_post`, `wf_put`, `wf_delete` functions.
