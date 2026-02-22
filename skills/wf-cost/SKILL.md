@@ -1,12 +1,17 @@
 ---
-allowed-tools: Bash, Read
+name: wf-cost
 description: Check credit balance and estimate costs on Willform Agent
+allowed-tools: Bash, Read
 user-invocable: true
 ---
 
 # /wf-cost — Credit Balance & Cost Estimator
 
 Check the current credit balance and estimate burn rate for all running deployments on Willform Agent.
+
+## Language
+
+After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English if `en` or empty, Korean if `ko`. See `skills/willform-deploy/references/language-guidelines.md` for output conventions. If not set, ask the user to choose (English/한국어) and save to config.
 
 ## Steps
 

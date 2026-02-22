@@ -1,12 +1,17 @@
 ---
-allowed-tools: Bash, Read, Write, Glob, AskUserQuestion
+name: wf-build-push
 description: Build a Docker image and push to GHCR for Willform deployment
+allowed-tools: Bash, Read, Write, Glob, AskUserQuestion
 user-invocable: true
 ---
 
 # Build & Push Docker Image to GHCR
 
 Build a Docker image from the current project and push it to GitHub Container Registry for deployment on Willform Agent.
+
+## Language
+
+After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English if `en` or empty, Korean if `ko`. See `skills/willform-deploy/references/language-guidelines.md` for output conventions. If not set, ask the user to choose (English/한국어) and save to config.
 
 ## Instructions
 

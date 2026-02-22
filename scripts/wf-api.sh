@@ -21,6 +21,11 @@ wf_load_config() {
 
   WF_BASE_URL="${WF_BASE_URL:-$_WF_DEFAULT_BASE_URL}"
 
+  if [[ -z "${WF_LANGUAGE:-}" ]] && [[ -f "$_WF_CONFIG_FILE" ]]; then
+    WF_LANGUAGE=$(sed -n 's/^language:[[:space:]]*//p' "$_WF_CONFIG_FILE" | tr -d '[:space:]')
+  fi
+  WF_LANGUAGE="${WF_LANGUAGE:-}"
+
   if [[ -z "${WF_API_KEY:-}" ]]; then
     echo "ERROR: WF_API_KEY not set. Run /wf-setup first." >&2
     return 1

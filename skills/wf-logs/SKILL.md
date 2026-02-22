@@ -1,12 +1,17 @@
 ---
-allowed-tools: Bash, Read
+name: wf-logs
 description: View deployment logs from Willform Agent
+allowed-tools: Bash, Read
 user-invocable: true
 ---
 
 # View Deployment Logs
 
 Retrieve and display container logs for a deployment on Willform Agent.
+
+## Language
+
+After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English if `en` or empty, Korean if `ko`. See `skills/willform-deploy/references/language-guidelines.md` for output conventions. If not set, ask the user to choose (English/한국어) and save to config.
 
 ## Instructions
 
