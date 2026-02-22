@@ -31,10 +31,10 @@ source scripts/wf-api.sh && wf_load_config
        my-db           running     def-456-...
      ```
 
-3. **Fetch logs**:
+3. **Fetch logs** using the shared helper:
 
 ```bash
-response=$(curl -s -H "Authorization: Bearer $WF_API_KEY" "$WF_API_URL/api/deploy/${DEPLOY_ID}/logs")
+response=$(wf_get "/api/deploy/${DEPLOY_ID}/logs")
 ```
 
 4. **Output the logs**:

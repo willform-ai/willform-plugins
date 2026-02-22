@@ -17,7 +17,12 @@ Follow these steps in order. Stop and report to the user if any step fails.
 Run the auth check script:
 
 ```bash
-bash ~/.claude/plugins/willform-plugins/skills/dockerfile-build/scripts/ghcr-auth-check.sh
+bash skills/dockerfile-build/scripts/ghcr-auth-check.sh
+```
+
+If the script path is not found, try the plugin root:
+```bash
+bash "${PLUGIN_DIR:-skills/dockerfile-build}/scripts/ghcr-auth-check.sh"
 ```
 
 If the script exits non-zero, show the user the authentication options from the output and stop. Do not proceed without GHCR auth.

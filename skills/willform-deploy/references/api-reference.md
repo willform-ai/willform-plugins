@@ -170,7 +170,7 @@ Response: {
   "data": {
     "id": "uuid",
     "name": "string",
-    "status": "running | stopped | suspended | failed | deploying",
+    "status": "running | pending | stopped | suspended | failed",
     "chartType": "string",
     "image": "string",
     "port": "number",

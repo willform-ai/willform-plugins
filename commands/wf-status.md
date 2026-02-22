@@ -20,10 +20,10 @@ source scripts/wf-api.sh && wf_load_config
 
 ### List All Deployments
 
-Call `GET /api/deploy` and format the output as a table:
+Call `GET /api/deploy` using the shared helper:
 
 ```bash
-response=$(curl -s -H "Authorization: Bearer $WF_API_KEY" "$WF_API_URL/api/deploy")
+response=$(wf_get "/api/deploy")
 ```
 
 Parse the JSON response (`data` is an array of deployments). For each deployment, extract: `name`, `status`, `chartType`, `domain` (may be null), `namespaceId`.
