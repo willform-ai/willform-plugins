@@ -104,15 +104,22 @@ Nine workload types are supported:
   "port": 80,
   "env": { "KEY": "value" },
   "replicas": 1,
-  "volume": { "size": "10Gi", "mountPath": "/data" },
+  "volumeSizeGb": 10,
+  "volumeMountPath": "/data",
   "healthCheckPath": "/health",
   "fsGroup": 1000,
-  "imagePullSecretName": "my-registry-secret",
-  "chartConfig": { "schedule": "*/5 * * * *" }
+  "registryAuth": { "server": "ghcr.io", "username": "user", "password": "token" },
+  "schedule": "*/5 * * * *",
+  "command": ["python", "-m", "gunicorn", "app:app"],
+  "args": ["node", "server.js", "--bind", "lan"]
 }
 ```
 
 Only `namespaceId`, `name`, and `image` are required. All other fields are optional.
+
+- `command` overrides the container ENTRYPOINT (replaces the image's entrypoint script entirely)
+- `args` overrides the container CMD (keeps the entrypoint script intact — prefer this for adding CLI flags)
+- `healthCheckPath`: set to `null` to disable health checks for non-HTTP services
 
 ## Error Handling
 

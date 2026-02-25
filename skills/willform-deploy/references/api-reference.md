@@ -130,11 +130,15 @@ Body: {
   "port?": "number",
   "env?": "{ KEY: VALUE }",
   "replicas?": "number",
-  "volume?": "{ size: string, mountPath: string }",
-  "healthCheckPath?": "string",
+  "volumeSizeGb?": "number (0-100, default: 0)",
+  "volumeMountPath?": "string (default: /data)",
+  "healthCheckPath?": "string | null (null disables health check)",
   "fsGroup?": "number",
-  "imagePullSecretName?": "string",
-  "chartConfig?": "{ schedule?: string }"
+  "registryAuth?": "{ server: string, username: string, password: string } | null",
+  "schedule?": "string (cron expression, required for cronjob)",
+  "concurrencyPolicy?": "Forbid | Allow | Replace (for cronjob)",
+  "command?": "string[] (override ENTRYPOINT — replaces entrypoint script entirely)",
+  "args?": "string[] (override CMD — keeps entrypoint intact, use for CLI flags like --bind lan)"
 }
 Response: {
   "success": true,

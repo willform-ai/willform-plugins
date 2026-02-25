@@ -4,7 +4,7 @@ Pre-configured personality templates for specialized OpenClaw agents. Each soul 
 
 ## How Souls Work
 
-A "soul" is a preset that configures `AGENT_SYSTEM_PROMPT`, `AGENT_NAME`, and `AGENT_DESCRIPTION` environment variables. The underlying image (alpine/openclaw:2026.2.13) and port (18789) stay the same.
+A "soul" is a preset that pre-fills the `soul.md` file content (system prompt), agent name, and description. The underlying image (`ghcr.io/openclaw/openclaw:latest`) and port (18789) stay the same.
 
 Users can customize any soul after selection — the presets are starting points, not locked configs.
 

@@ -9,11 +9,119 @@ user-invocable: true
 
 ## Goal
 
-Deploy an OpenClaw AI agent runtime to Willform Agent with Telegram integration. Guides the user through the full setup: Telegram bot creation, LLM provider selection, API key configuration, soul selection, and deployment.
+Deploy an OpenClaw AI agent runtime to Willform Agent with Telegram integration.
 
 ## Language
 
-After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English if `en` or empty, Korean if `ko`. See `skills/willform-deploy/references/language-guidelines.md` for output conventions. If not set, ask the user to choose (English/한국어) and save to config.
+After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English if `en` or empty, Korean if `ko`. See `skills/willform-deploy/references/language-guidelines.md`. If not set, ask the user to choose and save to config.
+
+## Deployment Template
+
+This is the target deployment structure. Collect user input (Steps 1-8), then build this JSON and deploy (Step 9).
+
+### Architecture
+
+- Image: `ghcr.io/openclaw/openclaw:latest`
+- Gateway: loopback(`127.0.0.1:18790`) + HTTP reverse proxy(`0.0.0.0:18789` → `127.0.0.1:18790`, strips Cloudflare headers)
+- Volume: `/home/node/.openclaw` (10GB)
+- healthCheckPath: `"null"` (string)
+- Why loopback: `bind: lan` fails with `token_missing` due to OpenClaw Control UI WebSocket auth bug
+- Why HTTP proxy (not TCP): TCP proxy relays Cloudflare headers verbatim → OpenClaw detects remote client → requires device pairing approval with no admin to approve (chicken-and-egg). HTTP proxy strips proxy headers but preserves Host header → Origin matches Host (passes origin check) + socket is localhost (auto-pairing).
+
+### Env Variables
+
+- `${LLM_KEY_VAR}`: LLM API key (var name depends on provider)
+- `TELEGRAM_BOT_TOKEN`: Telegram bot token (optional)
+- `OPENCLAW_GATEWAY_TOKEN`: Control UI auth token
+
+### Container Startup Command (`sh -c`)
+
+1. Write `/home/node/.openclaw/openclaw.json`:
+
+```json
+{
+  "gateway": {
+    "mode": "local",
+    "bind": "loopback",
+    "port": 18790,
+    "controlUi": { "enabled": true, "allowInsecureAuth": true },
+    "auth": { "mode": "token" },
+    "trustedProxies": ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "dmPolicy": "open",
+      "allowFrom": ["*"]
+    }
+  },
+  "agents": {
+    "defaults": { "sandbox": { "mode": "off" } }
+  },
+  "tools": {
+    "web": { "search": { "enabled": true }, "fetch": { "enabled": true } },
+    "sandbox": {
+      "tools": {
+        "allow": ["exec","process","read","write","edit","sessions_list","sessions_history","sessions_send","sessions_spawn","session_status","browser","canvas","nodes","cron","gateway","web_search","web_fetch"],
+        "deny": []
+      }
+    }
+  }
+}
+```
+
+If Telegram is not configured, set `"telegram": { "enabled": false }`.
+
+2. Write `/home/node/.openclaw/soul.md` — content from selected soul preset or user-provided text.
+
+3. Write `/home/node/.openclaw/agents.md` — agent behavior rules from user input.
+
+4. Start HTTP reverse proxy in background (strips Cloudflare proxy headers so OpenClaw sees clean localhost connections and auto-approves device pairing):
+
+```javascript
+node -e "const h=require('http'),n=require('net'),S=['x-forwarded-for','x-forwarded-proto','x-real-ip','cf-connecting-ip','cf-ray','cf-visitor','cf-ipcountry','cdn-loop','cf-worker'];const s=h.createServer((q,r)=>{S.forEach(k=>delete q.headers[k]);const p=h.request({hostname:'127.0.0.1',port:18790,path:q.url,method:q.method,headers:q.headers},x=>{r.writeHead(x.statusCode,x.headers);x.pipe(r)});q.pipe(p);p.on('error',()=>r.destroy())});s.on('upgrade',(q,sk,hd)=>{S.forEach(k=>delete q.headers[k]);const p=n.connect(18790,'127.0.0.1',()=>{let r=q.method+' '+q.url+' HTTP/1.1\r\n';for(const[k,v]of Object.entries(q.headers))r+=k+': '+v+'\r\n';r+='\r\n';p.write(r);if(hd.length)p.write(hd);sk.pipe(p);p.pipe(sk)});p.on('error',()=>sk.destroy());sk.on('error',()=>p.destroy())});s.listen(18789,'0.0.0.0')" &
+```
+
+5. Execute gateway:
+
+```
+exec node dist/index.js gateway --allow-unconfigured
+```
+
+### Deploy API Body
+
+```json
+{
+  "namespaceId": "${NAMESPACE_ID}",
+  "name": "${AGENT_NAME}",
+  "image": "ghcr.io/openclaw/openclaw:latest",
+  "port": 18789,
+  "chartType": "web",
+  "replicas": 1,
+  "volumeSizeGb": 10,
+  "volumeMountPath": "/home/node/.openclaw",
+  "healthCheckPath": "null",
+  "env": {
+    "${LLM_KEY_VAR}": "${LLM_API_KEY}",
+    "OPENCLAW_GATEWAY_TOKEN": "${GATEWAY_TOKEN}",
+    "TELEGRAM_BOT_TOKEN": "${TELEGRAM_BOT_TOKEN}"
+  },
+  "command": ["sh", "-c", "${STARTUP_CMD}"]
+}
+```
+
+### Deploy Sequence
+
+1. `POST /api/namespaces` → namespace 생성 (2 cores, 4GB)
+2. `POST /api/deploy` → 위 body로 배포
+3. `POST /api/deploy/{id}/expose` → 도메인 노출
+4. `GET /api/deploy/{id}` 폴링 → status `running` 대기
+
+### First Access
+
+`https://{domain}/?token={GATEWAY_TOKEN}` — 브라우저에서 열어 디바이스 페어링. 이후 토큰 불필요.
+
+---
 
 ## Steps
 
@@ -27,177 +135,81 @@ If this fails, tell the user to run `/wf-setup` first and stop.
 
 ### 2. Check language preference
 
-After loading config, read `WF_LANGUAGE`. If it is empty or not set:
+If `WF_LANGUAGE` is empty, ask the user (English/한국어) and save to config.
 
-1. Use AskUserQuestion to ask: "Which language do you prefer? / 어떤 언어로 진행할까요?"
-   - Options: "English (Recommended)" / "한국어"
-2. Save the choice to `~/.claude/willform-plugins.local.md` by appending `language: en` or `language: ko`
-3. Set `WF_LANGUAGE` accordingly
+### 3. Telegram Bot setup
 
-Use the selected language for ALL subsequent output. See `skills/willform-deploy/references/language-guidelines.md` for conventions.
+Show how to create a bot via @BotFather. Use AskUserQuestion to collect:
+- Bot token (validate: `[0-9]+:[A-Za-z0-9_-]+`)
+- Bot username (without @)
 
-### 3. Telegram Bot setup guide
-
-Show the user how to create a Telegram bot:
-
-```
-To connect your AI agent to Telegram, you need a bot token from @BotFather.
-
-1. Open Telegram and search for @BotFather
-2. Send /newbot
-3. Choose a display name for your bot (e.g., "My AI Agent")
-4. Choose a username ending in "bot" (e.g., "my_ai_agent_bot")
-5. Copy the token BotFather gives you
-
-Token format: 123456789:ABCdefGHIjklMNOpqrsTUVwxyz
-```
-
-Use AskUserQuestion to collect the token. Validate that it matches the pattern `[0-9]+:[A-Za-z0-9_-]+`.
-
-Also ask for the bot username (without @) — this is needed to generate the `https://t.me/{bot_username}` link in the final report.
-
-If the user wants to skip Telegram integration, allow it — `TELEGRAM_BOT_TOKEN` is optional.
+Telegram is optional — allow skipping.
 
 ### 4. Choose LLM provider
 
-Use AskUserQuestion to let the user pick their LLM provider:
+Use AskUserQuestion:
 
-- **OpenRouter** (Recommended) — Access all models (Claude, GPT, Gemini, etc.) with one key. https://openrouter.ai/keys
+- **OpenRouter** (Recommended) — All models with one key. https://openrouter.ai/keys
 - **OpenAI** — GPT-4o, GPT-4o-mini. https://platform.openai.com/api-keys
 - **Anthropic** — Claude Sonnet, Claude Haiku. https://console.anthropic.com/settings/keys
-- **Google Gemini** — Gemini 2.0 Flash, Gemini 2.0 Pro. https://aistudio.google.com/apikey
+- **Google Gemini** — Gemini 2.0 Flash/Pro. https://aistudio.google.com/apikey
+
+Provider → env var mapping:
+
+| Provider | Env var | Prefix |
+|----------|---------|--------|
+| OpenRouter | `OPENROUTER_API_KEY` | `sk-or-` |
+| OpenAI | `OPENAI_API_KEY` | `sk-` |
+| Anthropic | `ANTHROPIC_API_KEY` | `sk-ant-` |
+| Google | `GOOGLE_API_KEY` | `AIza` |
 
 ### 5. Collect API key
 
-Show the key signup URL for the selected provider:
-
-| Provider | Key URL | Key prefix |
-|----------|---------|------------|
-| OpenRouter | https://openrouter.ai/keys | `sk-or-` |
-| OpenAI | https://platform.openai.com/api-keys | `sk-` |
-| Anthropic | https://console.anthropic.com/settings/keys | `sk-ant-` |
-| Google Gemini | https://aistudio.google.com/apikey | `AIza` |
-
-Use AskUserQuestion to collect the key. Validate the prefix matches the selected provider.
+Show key URL for selected provider. Use AskUserQuestion to collect. Validate prefix.
 
 ### 6. Choose soul (role preset)
 
-A "soul" defines the agent's role, expertise area, system prompt, and suggested model. Read the soul catalog from `skills/willform-deploy/references/openclaw-souls.md`.
+Read `skills/willform-deploy/references/openclaw-souls.md`. Use AskUserQuestion (Korean: "역할 프리셋"):
 
-Use AskUserQuestion to let the user pick a soul. When displaying in Korean, describe soul as "역할 프리셋" (not "성격"):
+- **real-estate-expert** / **stock-investment-expert** / **legal-assistant** / **coding-mentor** / **data-analyst** / **writing-coach** / **custom**
 
-- **real-estate-expert** — Real estate investment analyst (market analysis, property valuation, ROI projections)
-- **stock-investment-expert** — Stock analyst (fundamental/technical analysis, portfolio management)
-- **legal-assistant** — Legal research assistant (contract analysis, compliance, corporate law)
-- **coding-mentor** — Programming tutor (guided learning, code review, project-based teaching)
-- **data-analyst** — Data analyst (statistical analysis, SQL, visualization, business insights)
-- **writing-coach** — Writing assistant (editing, content strategy, style improvement)
-- **custom** — Start from scratch with your own system prompt
+If preset: load soul content and suggested model. Allow override.
+If custom: ask user to provide soul content and agent behavior rules.
 
-If user selects a preset soul:
-- Pre-fill `AGENT_NAME`, `AGENT_DESCRIPTION`, `AGENT_SYSTEM_PROMPT`, and suggested model from the catalog
-- Use the model suggestion matching the selected provider (e.g., if Anthropic → `claude-sonnet-4-20250514`, if OpenAI → `gpt-4o`)
-- Let the user override any pre-filled value if they want
+### 7. Gather remaining input
 
-If user selects "custom":
-- Proceed with manual input (no pre-filled values)
+Use AskUserQuestion for each:
 
-### 7. Gather user input
-
-Use AskUserQuestion for each. Skip items already filled by the soul preset (but allow override):
-
-1. **Agent name** (required): Used as deployment name and `AGENT_NAME` env var. Must be lowercase alphanumeric with hyphens, no spaces. If soul selected, suggest a default (e.g., `real-estate-advisor`).
-
-2. **Agent model** (optional): Default from soul preset for the selected provider. Show provider-specific options:
-   - OpenRouter: `anthropic/claude-sonnet-4-20250514`, `openai/gpt-4o`, `google/gemini-2.0-flash`
-   - OpenAI: `gpt-4o`, `gpt-4o-mini`
-   - Anthropic: `claude-sonnet-4-20250514`, `claude-haiku-4.5`
-   - Google: `gemini-2.0-flash`, `gemini-2.0-pro`
-
-3. **Agent description** (optional): Pre-filled from soul if selected.
-
-4. **System prompt** (optional): Pre-filled from soul. For custom soul, ask the user to provide one. The user can also modify a preset's system prompt.
-
-5. **Namespace**: Ask whether to create a new namespace or use an existing one.
-   - If existing: list namespaces via `wf_get "/api/namespaces"` and let user pick
-   - If new: ask for namespace name (default: same as agent name)
+1. **Agent name** (required): Lowercase alphanumeric + hyphens.
+2. **Gateway token** (required): Suggest `openssl rand -hex 16`.
+3. **Agent behavior rules** (optional): For `agents.md`. Suggest defaults based on soul.
+4. **Namespace**: New or existing. New namespaces need 2 cores, 4GB.
 
 ### 8. Create namespace (if needed)
 
 ```bash
 RESULT=$(wf_post "/api/namespaces" "{\"name\":\"${NAMESPACE_NAME}\",\"allocatedCores\":2,\"allocatedMemoryGb\":4}")
 NAMESPACE_ID=$(wf_json_field "$RESULT" "data.id")
-SHORT_ID=$(wf_json_field "$RESULT" "data.shortId")
 ```
 
-OpenClaw needs 2 cores / 4GB memory. `allocatedCores` and `allocatedMemoryGb` are required fields.
+### 9. Deploy
 
-If using an existing namespace, extract `NAMESPACE_ID` and `SHORT_ID` from the selected namespace. Verify the namespace has sufficient quota (at least 2 cores, 4GB memory).
-
-### 9. Deploy OpenClaw
-
-Build the env JSON with provider-specific key mapping:
+Build the startup command string from the Deployment Template above, substituting collected values. Use `jq` for safe JSON construction of the deploy body. Then:
 
 ```bash
-# Determine the LLM key env var name based on provider
-case "$PROVIDER" in
-  openrouter) LLM_KEY_VAR="OPENROUTER_API_KEY" ;;
-  openai)     LLM_KEY_VAR="OPENAI_API_KEY" ;;
-  anthropic)  LLM_KEY_VAR="ANTHROPIC_API_KEY" ;;
-  google)     LLM_KEY_VAR="GOOGLE_API_KEY" ;;
-esac
-
-# Build env JSON
-ENV_JSON=$(jq -n \
-  --arg llm_key_var "$LLM_KEY_VAR" \
-  --arg llm_key "$LLM_API_KEY" \
-  --arg model "$MODEL" \
-  --arg name "$AGENT_NAME" \
-  --arg desc "$AGENT_DESCRIPTION" \
-  --arg prompt "$AGENT_SYSTEM_PROMPT" \
-  --arg tg_token "$TELEGRAM_BOT_TOKEN" \
-  '{
-    ($llm_key_var): $llm_key,
-    AGENT_MODEL: $model,
-    AGENT_NAME: $name
-  }
-  + (if $tg_token != "" then {TELEGRAM_BOT_TOKEN: $tg_token} else {} end)
-  + (if $desc != "" then {AGENT_DESCRIPTION: $desc} else {} end)
-  + (if $prompt != "" then {AGENT_SYSTEM_PROMPT: $prompt} else {} end)')
-
-RESULT=$(wf_post "/api/deploy" "{
-  \"namespaceId\": \"${NAMESPACE_ID}\",
-  \"name\": \"${AGENT_NAME}\",
-  \"image\": \"alpine/openclaw:2026.2.13\",
-  \"chartType\": \"web\",
-  \"port\": 18789,
-  \"env\": ${ENV_JSON}
-}")
-
+RESULT=$(wf_post "/api/deploy" "$DEPLOY_BODY")
 DEPLOYMENT_ID=$(wf_json_field "$RESULT" "data.deploymentId")
-```
 
-If the deploy call fails, show the error and stop.
-
-### 10. Expose default domain
-
-```bash
+# Expose domain
 RESULT=$(wf_post "/api/deploy/${DEPLOYMENT_ID}/expose")
 DOMAIN=$(wf_json_field "$RESULT" "data.hostname")
-```
 
-### 11. Poll for readiness
-
-Poll `GET /api/deploy/{id}` every 5 seconds, max 120 seconds (24 attempts):
-
-```bash
+# Poll for readiness (max 120s)
 for i in $(seq 1 24); do
   RESULT=$(wf_get "/api/deploy/${DEPLOYMENT_ID}")
   STATUS=$(wf_json_field "$RESULT" "data.status")
-  if [[ "$STATUS" == "running" ]]; then
-    break
-  elif [[ "$STATUS" == "failed" ]]; then
-    echo "Deployment failed." >&2
+  if [[ "$STATUS" == "running" ]]; then break; fi
+  if [[ "$STATUS" == "failed" ]]; then
     wf_get "/api/deploy/${DEPLOYMENT_ID}/logs"
     break
   fi
@@ -205,25 +217,25 @@ for i in $(seq 1 24); do
 done
 ```
 
-### 12. Report result
+### 10. Report result
 
-On success, display:
+On success:
 
 ```
 OpenClaw agent deployed successfully.
 
   Name:      {agent_name}
-  Soul:      {soul_name} (or "custom")
+  Soul:      {soul_name}
   Provider:  {provider}
-  Model:     {model}
   URL:       https://{domain}
-  Telegram:  https://t.me/{bot_username}  (if Telegram was configured)
+  Telegram:  https://t.me/{bot_username}  (if configured)
   Status:    running
+
+First access:
+  https://{domain}/?token={gateway_token}
 
 Use /wf-status to check deployment health.
 Use /wf-logs to view agent logs.
 ```
 
-If Telegram was configured, add: "Open the Telegram link above to start chatting with your agent."
-
-On failure or timeout, display the error and suggest checking logs with `wf_get "/api/deploy/${DEPLOYMENT_ID}/logs"`.
+On failure/timeout: show error, suggest `/wf-logs`.
