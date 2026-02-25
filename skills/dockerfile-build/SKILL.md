@@ -1,16 +1,17 @@
 ---
 name: dockerfile-build
-description: Generate Dockerfiles, build images, and push to GHCR for Willform deployment
+description: Generate Dockerfiles, build images, and push to GHCR or Docker Hub for Willform deployment
 ---
 
-# Dockerfile Build & Push to GHCR
+# Dockerfile Build & Push
 
-Analyze a project, generate an optimized Dockerfile, build a Docker image, and push it to GitHub Container Registry (GHCR) for deployment on Willform Agent.
+Analyze a project, generate an optimized Dockerfile, build a Docker image, and push it to GitHub Container Registry (GHCR) or Docker Hub for deployment on Willform Agent.
 
 ## Prerequisites
 
 - Docker installed and running (`docker info` should succeed)
-- GitHub CLI (`gh`) authenticated OR `GITHUB_TOKEN` environment variable set with `write:packages` scope
+- For GHCR: GitHub CLI (`gh`) authenticated OR `GITHUB_TOKEN` environment variable set with `write:packages` scope
+- For Docker Hub: `docker login` completed OR `DOCKERHUB_TOKEN` + `DOCKERHUB_USERNAME` environment variables set
 - Project source code in the current working directory
 
 ## Workflow
@@ -36,8 +37,10 @@ Analyze a project, generate an optimized Dockerfile, build a Docker image, and p
    docker build --platform linux/amd64 -t ghcr.io/{owner}/{repo}:{tag} .
    ```
 
-5. **Authenticate to GHCR**
-   Run `scripts/ghcr-auth-check.sh` to verify authentication. If not authenticated:
+5. **Authenticate to registry**
+   Run `scripts/registry-auth-check.sh ghcr` or `scripts/registry-auth-check.sh dockerhub` to verify authentication.
+
+   **GHCR** — If not authenticated:
    ```bash
    echo $GITHUB_TOKEN | docker login ghcr.io -u {user} --password-stdin
    ```
@@ -45,6 +48,16 @@ Analyze a project, generate an optimized Dockerfile, build a Docker image, and p
    ```bash
    gh auth token | docker login ghcr.io -u $(gh api user -q .login) --password-stdin
    ```
+
+   **Docker Hub** — If not authenticated:
+   ```bash
+   docker login
+   ```
+   Or with environment variables:
+   ```bash
+   echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USERNAME --password-stdin
+   ```
+   Create a token at: https://hub.docker.com/settings/security
 
 6. **Push image**
    ```bash
@@ -64,3 +77,4 @@ Analyze a project, generate an optimized Dockerfile, build a Docker image, and p
 - **Port alignment**: The default port in the Dockerfile `EXPOSE` directive should match what the user specifies (or the chart type default) at deploy time. Willform preflight checks warn on port mismatches.
 - **Tag strategy**: Use the short git SHA (`git rev-parse --short HEAD`) as the image tag. This provides traceability back to the exact commit. Fall back to `latest` only when not in a git repository.
 - **Image size**: Multi-stage builds keep final images small. Avoid copying build tools, test files, or dev dependencies into the final stage.
+- **Multi-registry support**: When deploying via the Willform Agent API, provide `registryAuth` with the correct server value: `"ghcr.io"` for GHCR, `"https://index.docker.io/v1/"` for Docker Hub. The `/wf-build-push` command outputs the correct `registryAuth` JSON for the selected registry.

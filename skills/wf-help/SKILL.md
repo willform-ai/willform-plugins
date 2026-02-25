@@ -44,8 +44,8 @@ Getting Started:
 Deploy:
   /wf-deploy-openclaw    Deploy an OpenClaw AI agent with Telegram bot
                          Guides you through: Telegram setup → LLM provider
-                         → soul preset → deploy. No prior setup needed.
-  /wf-build-push         Build Docker image and push to GHCR
+                         → soul preset → gateway token → deploy.
+  /wf-build-push         Build Docker image and push to GHCR or Docker Hub
 
 Monitor:
   /wf-status             Check deployment status (all or specific)
@@ -57,11 +57,12 @@ Billing:
 
 Quick Start:
   1. /wf-setup                Set your Willform API key
-  2. /wf-deploy-openclaw      Deploy an AI agent (walks you through
-                              Telegram bot + LLM key + soul selection)
-  3. Open https://t.me/your_bot_username to chat with your agent
-  4. /wf-status               Verify it's running
-  5. /wf-cost                 Check your spending
+  2. /wf-deploy-openclaw      Deploy an AI agent (Telegram bot + LLM key
+                              + soul selection + gateway token)
+  3. Open https://{domain}/?token={gateway_token} to pair your device
+  4. Chat via https://t.me/your_bot_username or the web dashboard
+  5. /wf-status               Verify it's running
+  6. /wf-cost                 Check your spending
 
 Supported LLM Providers:
   OpenRouter (Recommended)  All models with one key — openrouter.ai/keys
@@ -95,8 +96,8 @@ Willform Agent — Kubernetes 배포 CLI 플러그인
 배포:
   /wf-deploy-openclaw    Telegram 봇 + AI 에이전트 배포
                          Telegram 설정 → LLM 선택 → soul 역할 선택
-                         → 배포까지 안내합니다.
-  /wf-build-push         Docker 이미지 빌드 및 GHCR 푸시
+                         → gateway 토큰 → 배포까지 안내합니다.
+  /wf-build-push         Docker 이미지 빌드 및 GHCR/Docker Hub 푸시
 
 모니터링:
   /wf-status             배포 상태 확인 (전체 또는 특정 배포)
@@ -109,10 +110,11 @@ Willform Agent — Kubernetes 배포 CLI 플러그인
 빠른 시작:
   1. /wf-setup                Willform API 키 설정
   2. /wf-deploy-openclaw      AI 에이전트 배포 (Telegram 봇 + LLM 키
-                              + soul 역할 선택까지 안내)
-  3. https://t.me/봇_username 에서 에이전트와 대화
-  4. /wf-status               실행 상태 확인
-  5. /wf-cost                 비용 확인
+                              + soul 역할 선택 + gateway 토큰)
+  3. https://{도메인}/?token={gateway_token} 으로 디바이스 페어링
+  4. https://t.me/봇_username 또는 웹 대시보드에서 에이전트와 대화
+  5. /wf-status               실행 상태 확인
+  6. /wf-cost                 비용 확인
 
 지원 LLM 프로바이더:
   OpenRouter (추천)       모든 모델 하나의 키로 — openrouter.ai/keys

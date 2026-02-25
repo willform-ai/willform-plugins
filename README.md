@@ -33,7 +33,7 @@ You'll need a Willform Agent API key (`wf_sk_*`). Get one from the [dashboard](h
 | `/wf-help` | Show all commands and quick start guide |
 | `/wf-setup` | Configure API key, base URL, and language |
 | `/wf-deploy-openclaw` | Deploy an OpenClaw AI agent with soul presets |
-| `/wf-build-push` | Build Docker image and push to GHCR |
+| `/wf-build-push` | Build Docker image and push to GHCR or Docker Hub |
 | `/wf-status` | Check deployment status |
 | `/wf-status <name>` | Detailed status for a specific deployment |
 | `/wf-logs <name>` | View container logs |
@@ -67,7 +67,7 @@ These skills provide context for Claude when working with Willform:
 | Skill | Description |
 |-------|-------------|
 | `willform-deploy` | Deployment workflow and REST API reference |
-| `dockerfile-build` | Dockerfile templates and GHCR authentication |
+| `dockerfile-build` | Dockerfile templates and registry authentication (GHCR, Docker Hub) |
 | `deploy-monitoring` | Status interpretation and diagnostic guide |
 | `cost-tracking` | Pricing tables and cost calculation |
 

@@ -34,7 +34,7 @@ scripts/
 | `/wf-help` | All commands + quick start |
 | `/wf-setup` | API key + language config |
 | `/wf-deploy-openclaw` | Deploy OpenClaw agent with Telegram + multi-provider LLM |
-| `/wf-build-push` | Dockerfile + GHCR push |
+| `/wf-build-push` | Dockerfile + GHCR/Docker Hub push |
 | `/wf-status` | Deployment status |
 | `/wf-logs` | Container logs |
 | `/wf-cost` | Credit balance + burn rate |
@@ -66,5 +66,5 @@ scripts/
 
 ## Related Project
 
-- Willform Agent (`~/Projects/infra-agent`): The platform this plugin targets
+- Willform Agent (`~/Projects/willform-agent`): The platform this plugin targets (has MCP server at /api/mcp)
 - REST API docs: `skills/willform-deploy/references/api-reference.md`

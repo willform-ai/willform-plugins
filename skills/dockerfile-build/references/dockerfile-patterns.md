@@ -219,6 +219,27 @@ EXPOSE 8080
 CMD ["java", "-jar", "app.jar"]
 ```
 
+## Ruby
+
+```dockerfile
+FROM ruby:3.3-slim AS builder
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential libpq-dev && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+COPY Gemfile Gemfile.lock ./
+RUN bundle config set --local without 'development test' && bundle install --jobs 4
+COPY . .
+
+FROM ruby:3.3-slim
+RUN apt-get update && apt-get install -y --no-install-recommends libpq5 && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+COPY --from=builder /usr/local/bundle /usr/local/bundle
+COPY --from=builder /app .
+EXPOSE 3000
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+```
+
+If the project uses Rails, ensure `RAILS_ENV=production` and `SECRET_KEY_BASE` are set. For non-Rails Rack apps, adjust the CMD to the appropriate server (e.g., `rackup`, `thin`). If `Gemfile.lock` does not exist, replace `bundle install` with `bundle lock && bundle install`.
+
 ## Static Site (HTML/CSS/JS)
 
 ```dockerfile
