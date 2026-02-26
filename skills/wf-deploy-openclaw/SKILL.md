@@ -33,10 +33,13 @@ This is the target deployment structure. Collect user input (Steps 1-8), then bu
 - `${LLM_KEY_VAR}`: LLM API key (var name depends on provider)
 - `TELEGRAM_BOT_TOKEN`: Telegram bot token (optional)
 - `OPENCLAW_GATEWAY_TOKEN`: Control UI auth token
+- `OPENCLAW_DOMAIN`: Exposed domain (set after expose, triggers restart with correct allowedOrigins)
 
 ### Container Startup Command (`sh -c`)
 
 1. Write `/home/node/.openclaw/openclaw.json`:
+
+Use an unquoted heredoc delimiter (no single quotes around `OCJSON`) so that `$OPENCLAW_DOMAIN` expands at runtime.
 
 ```json
 {
@@ -44,15 +47,18 @@ This is the target deployment structure. Collect user input (Steps 1-8), then bu
     "mode": "local",
     "bind": "loopback",
     "port": 18790,
-    "controlUi": { "enabled": true, "allowInsecureAuth": true },
-    "auth": { "mode": "token" },
-    "trustedProxies": ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+    "controlUi": {
+      "enabled": true,
+      "dangerouslyDisableDeviceAuth": true,
+      "allowedOrigins": ["https://${OPENCLAW_DOMAIN:-localhost}"]
+    },
+    "auth": { "mode": "token" }
   },
   "channels": {
     "telegram": {
       "enabled": true,
-      "dmPolicy": "open",
-      "allowFrom": ["*"]
+      "dmPolicy": "allowlist",
+      "allowFrom": ["tg:TELEGRAM_USER_ID"]
     }
   },
   "agents": {
@@ -66,17 +72,22 @@ This is the target deployment structure. Collect user input (Steps 1-8), then bu
         "deny": []
       }
     }
+  },
+  "plugins": {
+    "entries": {
+      "telegram": { "enabled": true }
+    }
   }
 }
 ```
 
-If Telegram is not configured, set `"telegram": { "enabled": false }`.
+If Telegram is not configured, set `"telegram": { "enabled": false }` and omit `plugins.entries.telegram`.
 
 2. Write `/home/node/.openclaw/soul.md` — content from selected soul preset or user-provided text.
 
 3. Write `/home/node/.openclaw/agents.md` — agent behavior rules from user input.
 
-4. Start HTTP reverse proxy in background (strips Cloudflare proxy headers so OpenClaw sees clean localhost connections and auto-approves device pairing):
+4. Start HTTP reverse proxy in background (strips Cloudflare proxy headers only — do NOT rewrite Host/Origin headers, as that breaks cookie domain and device identity):
 
 ```javascript
 node -e "const h=require('http'),n=require('net'),S=['x-forwarded-for','x-forwarded-proto','x-real-ip','cf-connecting-ip','cf-ray','cf-visitor','cf-ipcountry','cdn-loop','cf-worker'];const s=h.createServer((q,r)=>{S.forEach(k=>delete q.headers[k]);const p=h.request({hostname:'127.0.0.1',port:18790,path:q.url,method:q.method,headers:q.headers},x=>{r.writeHead(x.statusCode,x.headers);x.pipe(r)});q.pipe(p);p.on('error',()=>r.destroy())});s.on('upgrade',(q,sk,hd)=>{S.forEach(k=>delete q.headers[k]);const p=n.connect(18790,'127.0.0.1',()=>{let r=q.method+' '+q.url+' HTTP/1.1\r\n';for(const[k,v]of Object.entries(q.headers))r+=k+': '+v+'\r\n';r+='\r\n';p.write(r);if(hd.length)p.write(hd);sk.pipe(p);p.pipe(sk)});p.on('error',()=>sk.destroy());sk.on('error',()=>p.destroy())});s.listen(18789,'0.0.0.0')" &
@@ -114,12 +125,13 @@ exec node dist/index.js gateway --allow-unconfigured
 
 1. `POST /api/namespaces` → namespace 생성 (2 cores, 4GB)
 2. `POST /api/deploy` → 위 body로 배포
-3. `POST /api/deploy/{id}/expose` → 도메인 노출
-4. `GET /api/deploy/{id}` 폴링 → status `running` 대기
+3. `POST /api/deploy/{id}/expose` → 도메인 노출, `{domain}` 획득
+4. `deploy_update_env` → `OPENCLAW_DOMAIN={domain}` 추가 (merge=true). 재시작 트리거하여 allowedOrigins 적용
+5. `GET /api/deploy/{id}` 폴링 → status `running` 대기
 
 ### First Access
 
-`https://{domain}/?token={GATEWAY_TOKEN}` — 브라우저에서 열어 디바이스 페어링. 이후 토큰 불필요.
+`https://{domain}/?token={GATEWAY_TOKEN}` — 브라우저에서 열어 디바이스 등록. 이후 토큰 불필요.
 
 ---
 
@@ -203,6 +215,9 @@ DEPLOYMENT_ID=$(wf_json_field "$RESULT" "data.deploymentId")
 # Expose domain
 RESULT=$(wf_post "/api/deploy/${DEPLOYMENT_ID}/expose")
 DOMAIN=$(wf_json_field "$RESULT" "data.hostname")
+
+# Set OPENCLAW_DOMAIN env var (triggers restart with correct allowedOrigins)
+wf_post "/api/mcp" "{\"jsonrpc\":\"2.0\",\"method\":\"tools/call\",\"params\":{\"name\":\"deploy_update_env\",\"arguments\":{\"deploymentId\":\"${DEPLOYMENT_ID}\",\"env\":{\"OPENCLAW_DOMAIN\":\"${DOMAIN}\"},\"merge\":true}},\"id\":1}"
 
 # Poll for readiness (max 120s)
 for i in $(seq 1 24); do

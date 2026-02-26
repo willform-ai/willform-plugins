@@ -15,7 +15,7 @@ OpenClaw's Control UI has a WebSocket auth bug when using `bind: lan` (Issues #7
 - Gateway binds to `127.0.0.1:18790` (loopback)
 - Node.js HTTP reverse proxy: `0.0.0.0:18789` → `127.0.0.1:18790`
 - Volume mount: `/home/node/.openclaw` (OpenClaw's default config dir)
-- The HTTP proxy strips Cloudflare proxy headers (X-Forwarded-For, CF-Connecting-IP, etc.) but preserves the Host header so Origin matches Host (passes origin check). Socket remoteAddress is 127.0.0.1 (auto-pairing).
+- The HTTP proxy strips Cloudflare proxy headers (X-Forwarded-For, CF-Connecting-IP, etc.) but preserves the original Host and Origin headers (do NOT rewrite them — rewriting breaks cookie domain for device identity). Socket remoteAddress is 127.0.0.1. Use `allowedOrigins` in openclaw.json to whitelist the external domain.
 
 ## Network
 
@@ -127,9 +127,14 @@ Open `https://{domain}/?token={OPENCLAW_GATEWAY_TOKEN}` in a browser to pair you
 
 ## Known Issues
 
-- **"pairing required" (code 1008) behind Cloudflare Tunnel**: OpenClaw auto-approves device pairing ONLY for connections from localhost with NO proxy headers. A raw TCP proxy relays Cloudflare headers (X-Forwarded-For, CF-Connecting-IP, etc.) → OpenClaw detects remote client → requires admin approval → chicken-and-egg deadlock on first device. Fix: use HTTP reverse proxy that strips proxy headers (see Startup Command above). Ref: OpenClaw Discussion #12437, Issue #1679.
+- **"pairing required" / "device identity required" (code 1008) behind Cloudflare Tunnel**: Two separate mechanisms interact:
+  1. **Proxy headers**: OpenClaw detects remote client from Cloudflare headers → requires pairing. Fix: HTTP reverse proxy that strips proxy headers.
+  2. **Cookie domain**: If the proxy rewrites Host to `127.0.0.1:18790`, OpenClaw sets cookies for localhost domain, but the browser is on the external domain → cookies rejected → device identity never persists. Fix: do NOT rewrite Host/Origin headers.
+  3. **Origin check**: With external Host, OpenClaw logs "non-local Host, treating as remote" and requires explicit `allowedOrigins`. Fix: add `"allowedOrigins": ["https://your-domain.willform.ai"]` to `controlUi`.
+  4. **Device pairing**: `dangerouslyDisableDeviceAuth: true` skips the pairing approval step but does NOT skip device identity registration. User must still visit `/?token=TOKEN` once.
+  Combined fix: strip Cloudflare headers + preserve Host/Origin + set `allowedOrigins` + `dangerouslyDisableDeviceAuth: true`.
 - **`bind: lan` + token_missing**: Control UI WebSocket doesn't pass the gateway token in the handshake (Issues #7749, #1679, #4941). Use `loopback` + HTTP reverse proxy instead.
 - **`auth.mode: "none"` invalid**: OpenClaw only supports `"token"` and `"pairing"` auth modes.
 - **`trustedProxies` gotcha**: Adding `127.0.0.0/8` to trustedProxies makes OpenClaw trust the proxy and resolve the real client IP from X-Forwarded-For → remote IP → still requires pairing. The correct fix is to strip the headers, not add loopback to trustedProxies.
-- **"origin not allowed" (code 1008) behind reverse proxy**: OpenClaw validates browser `Origin` header against the request `Host` header. If the proxy overrides `Host` to `127.0.0.1:18790`, the external-domain Origin mismatches → rejected. Fix: do NOT override `Host` header — let the original external Host pass through so Origin host matches Host. Note: `allowedOrigins` does NOT support wildcards (`"*"`); only exact origin URLs like `"https://example.com"`.
-- **"non-local Host header, treating as remote"**: Logged when socket is localhost but Host is external domain. This is a warning only — does NOT prevent auto-pairing. The proxy's socket remoteAddress (127.0.0.1) is the actual locality signal for auto-pairing, not the Host header.
+- **`allowedOrigins` does NOT support wildcards**: `"*"` is not valid. Must use exact origin URLs like `"https://example.willform.ai"`. Use `OPENCLAW_DOMAIN` env var + unquoted heredoc for dynamic expansion.
+- **"non-local Host header, treating as remote"**: Logged when socket is localhost but Host is external domain. This warning means OpenClaw will enforce `allowedOrigins` — it is NOT harmless if `allowedOrigins` is not configured.
