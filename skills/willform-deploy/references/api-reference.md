@@ -32,6 +32,7 @@ Response: {
 
 Note: create response is minimal. Use `GET /api/namespaces/{id}` for full details.
 Returns 409 if a namespace with the same name already exists for this user.
+Returns 402 `INSUFFICIENT_RUNWAY` if balance / total burn rate < 2 hours.
 
 ### GET /api/namespaces
 
@@ -85,6 +86,8 @@ Response: {
 }
 ```
 
+Returns 402 `INSUFFICIENT_RUNWAY` if increasing resources and balance / total burn rate < 2 hours.
+
 ### DELETE /api/namespaces/{id}
 
 Delete a namespace. Cascades to all deployments and domains.
@@ -111,6 +114,8 @@ Resume a suspended namespace.
 Auth: Bearer wf_sk_*
 Response: { "success": true }
 ```
+
+Returns 402 `INSUFFICIENT_RUNWAY` if balance / total burn rate < 2 hours.
 
 ---
 
@@ -154,6 +159,7 @@ Response: {
 ```
 
 Note: response uses `deploymentId` (not `id`). No `domain` field — domain is a separate action.
+Returns 402 `INSUFFICIENT_RUNWAY` if deployment has storage (volumeSizeGb > 0) and balance / total burn rate < 2 hours.
 
 ### GET /api/deploy
 

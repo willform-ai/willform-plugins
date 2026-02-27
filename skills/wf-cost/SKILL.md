@@ -81,6 +81,12 @@ After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English
    WARNING: LOW BALANCE — top up soon to avoid suspension and PVC purge!
    ```
 
+8. If remaining time < 2 hours, append an additional warning:
+
+   ```
+   CRITICAL: Below minimum runway (2 hours). Creating or expanding resources will be blocked (INSUFFICIENT_RUNWAY 402).
+   ```
+
 ## Notes
 
 - Storage costs are not included in default estimates since storage allocation varies per deployment. Actual burn rate may be higher if deployments use persistent volumes.

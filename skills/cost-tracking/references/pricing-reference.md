@@ -15,6 +15,17 @@
 - Suspension threshold: $0.01
 - Minimum topup: $2.00
 - Signup credit (phone auth only): $20.00
+- Minimum runway: 2 hours (balance / total burn rate >= 2h required to create/expand resources)
+
+## Treasury Policy (Minimum Runway)
+
+Before creating or expanding resources, the system checks: `balance / totalBurnRate >= 2 hours`.
+
+- Applies to: createNamespace, updateNamespace (increase only), resumeNamespace, createDeployment (with storage)
+- Error: `INSUFFICIENT_RUNWAY` (HTTP 402)
+- `totalBurnRate` = current burn rate + additional burn rate from the requested resource
+- Independent from watchdog suspension (watchdog = balance depletion, treasury = spending velocity)
+- Fix: top up credits until balance covers at least 2 hours of total burn rate
 
 ## Example Calculations
 

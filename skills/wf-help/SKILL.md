@@ -75,6 +75,10 @@ Pricing:
   Memory   $0.005/GB/hr
   Storage  $0.0001/GB/hr
 
+Note: Minimum runway policy — you need at least 2 hours of runway
+  (balance / burn rate >= 2h) to create or expand resources.
+  Error: INSUFFICIENT_RUNWAY (402). Top up credits to continue.
+
 API:      https://agent.willform.ai
 Docs:     https://agent.willform.ai/docs
 ```
@@ -126,6 +130,10 @@ Willform Agent — Kubernetes 배포 CLI 플러그인
   컴퓨팅   $0.04/코어/시간
   메모리   $0.005/GB/시간
   스토리지 $0.0001/GB/시간
+
+참고: 최소 runway 정책 — 리소스를 생성하거나 확장하려면
+  최소 2시간의 runway(잔액 / 소비율 >= 2시간)가 필요합니다.
+  오류: INSUFFICIENT_RUNWAY (402). 크레딧을 충전하세요.
 
 API:      https://agent.willform.ai
 문서:     https://agent.willform.ai/docs

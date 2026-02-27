@@ -39,6 +39,7 @@ Then use `wf_get`, `wf_post`, `wf_put`, `wf_delete` functions.
   - CrashLoopBackOff → check logs for startup errors
   - Suspended → credit balance depleted
   - OOMKilled → needs more memory
+  - INSUFFICIENT_RUNWAY (402) → balance / burn rate < 2 hours, top up credits
 - Suggest fix and offer to apply it
 
 ### 3. Manage Deployments
