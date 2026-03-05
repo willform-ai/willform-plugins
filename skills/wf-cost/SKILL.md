@@ -5,13 +5,13 @@ allowed-tools: Bash, Read
 user-invocable: true
 ---
 
-# /wf-cost — Credit Balance & Cost Estimator
+# /wf-cost -- Credit Balance & Cost Estimator
 
 Check the current credit balance and estimate burn rate for all running deployments on Willform Agent.
 
 ## Language
 
-After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English if `en` or empty, Korean if `ko`. See `skills/willform-deploy/references/language-guidelines.md` for output conventions. If not set, ask the user to choose (English/한국어) and save to config.
+After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English if `en` or empty, Korean if `ko`. If not set, ask the user to choose (English/한국어) and save to config.
 
 ## Steps
 
@@ -93,3 +93,9 @@ After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English
 - Cronjob costs only apply while the job is actively running, not while suspended between runs.
 - The `GET /api/deploy` endpoint returns deployments across all namespaces for the authenticated user.
 - All monetary values from the API are strings (numeric(18,8)). Parse carefully — do not use floating point for comparisons near the $0.01 threshold.
+
+## Error Handling
+
+- If API returns 401, suggest `/wf-setup` to reconfigure API key
+- If no running deployments found, show balance only with note that no resources are consuming credits
+- If balance is zero or negative, suggest `/wf-credits` to top up

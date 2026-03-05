@@ -5,7 +5,7 @@ allowed-tools: Bash, Read
 user-invocable: true
 ---
 
-# /wf-help — Willform Plugin Guide
+# /wf-help -- Willform Plugin Guide
 
 ## Language Selection
 
@@ -34,41 +34,42 @@ Willform Agent — CLI Plugin for Kubernetes Deployment
 
 What You Need:
   1. Willform API key     → Run /wf-setup to configure
-  2. Telegram bot token   → Create via @BotFather in Telegram
-  3. LLM API key          → From OpenRouter, OpenAI, Anthropic, or Google
+  2. Container image      → Use /wf-build-push to build, or use a public image
 
 Getting Started:
   /wf-setup              Configure API key and base URL
   /wf-help               Show this guide
 
 Deploy:
-  /wf-deploy-openclaw    Deploy an OpenClaw AI agent with Telegram bot
-                         Guides you through: Telegram setup → LLM provider
-                         → soul preset → gateway token → deploy.
+  /wf-deploy             Deploy any container to Willform Agent
+  /wf-template           Browse and deploy from pre-built templates
   /wf-build-push         Build Docker image and push to GHCR or Docker Hub
 
 Monitor:
   /wf-status             Check deployment status (all or specific)
-  /wf-status <name>      Detailed status for a specific deployment
   /wf-logs <name>        View container logs for a deployment
+  /wf-monitor            Deployment health check and issue diagnosis
+  /wf-diagnose <name>    Deep diagnosis with logs, events, and fixes
+
+Manage:
+  /wf-namespace          List, create, update, or delete namespaces
+  /wf-scale <name>       Scale, stop, restart, or delete a deployment
+  /wf-env <name>         View or update environment variables
+  /wf-domain             Expose deployments and manage custom domains
 
 Billing:
   /wf-cost               Credit balance and burn rate estimate
+  /wf-credits            Deposit options and transaction verification
+
+Agent:
+  /wf-agent              Interact with Willy AI agent
 
 Quick Start:
   1. /wf-setup                Set your Willform API key
-  2. /wf-deploy-openclaw      Deploy an AI agent (Telegram bot + LLM key
-                              + soul selection + gateway token)
-  3. Open https://{domain}/?token={gateway_token} to pair your device
-  4. Chat via https://t.me/your_bot_username or the web dashboard
-  5. /wf-status               Verify it's running
-  6. /wf-cost                 Check your spending
-
-Supported LLM Providers:
-  OpenRouter (Recommended)  All models with one key — openrouter.ai/keys
-  OpenAI                    GPT-4o, GPT-4o-mini — platform.openai.com/api-keys
-  Anthropic                 Claude Sonnet, Haiku — console.anthropic.com/settings/keys
-  Google Gemini             Gemini 2.0 Flash/Pro — aistudio.google.com/apikey
+  2. /wf-build-push           Build and push your Docker image (if custom)
+  3. /wf-deploy               Deploy a container
+  4. /wf-status               Verify it's running
+  5. /wf-cost                 Check your spending
 
 Pricing:
   Compute  $0.04/core/hr
@@ -90,41 +91,42 @@ Willform Agent — Kubernetes 배포 CLI 플러그인
 
 준비물:
   1. Willform API 키     → /wf-setup 으로 설정
-  2. Telegram 봇 토큰    → Telegram에서 @BotFather로 생성
-  3. LLM API 키          → OpenRouter, OpenAI, Anthropic, Google 중 택 1
+  2. 컨테이너 이미지      → /wf-build-push로 빌드하거나 공개 이미지 사용
 
 시작하기:
   /wf-setup              API 키 및 기본 URL 설정
   /wf-help               이 가이드 표시
 
 배포:
-  /wf-deploy-openclaw    Telegram 봇 + AI 에이전트 배포
-                         Telegram 설정 → LLM 선택 → soul 역할 선택
-                         → gateway 토큰 → 배포까지 안내합니다.
+  /wf-deploy             Willform Agent에 컨테이너 배포
+  /wf-template           템플릿 목록 조회 및 배포
   /wf-build-push         Docker 이미지 빌드 및 GHCR/Docker Hub 푸시
 
 모니터링:
   /wf-status             배포 상태 확인 (전체 또는 특정 배포)
-  /wf-status <이름>      특정 배포의 상세 상태
   /wf-logs <이름>        배포 컨테이너 로그 조회
+  /wf-monitor            배포 헬스 체크 및 문제 진단
+  /wf-diagnose <이름>    로그·이벤트 기반 상세 진단
+
+관리:
+  /wf-namespace          네임스페이스 목록, 생성, 수정, 삭제
+  /wf-scale <이름>       배포 스케일링, 중지, 재시작, 삭제
+  /wf-env <이름>         환경변수 조회 및 수정
+  /wf-domain             배포 도메인 노출 및 커스텀 도메인 관리
 
 비용:
   /wf-cost               크레딧 잔액 및 소비율 예측
+  /wf-credits            입금 옵션 및 트랜잭션 확인
+
+에이전트:
+  /wf-agent              Willy AI 에이전트 상호작용
 
 빠른 시작:
   1. /wf-setup                Willform API 키 설정
-  2. /wf-deploy-openclaw      AI 에이전트 배포 (Telegram 봇 + LLM 키
-                              + soul 역할 선택 + gateway 토큰)
-  3. https://{도메인}/?token={gateway_token} 으로 디바이스 페어링
-  4. https://t.me/봇_username 또는 웹 대시보드에서 에이전트와 대화
-  5. /wf-status               실행 상태 확인
-  6. /wf-cost                 비용 확인
-
-지원 LLM 프로바이더:
-  OpenRouter (추천)       모든 모델 하나의 키로 — openrouter.ai/keys
-  OpenAI                  GPT-4o, GPT-4o-mini — platform.openai.com/api-keys
-  Anthropic               Claude Sonnet, Haiku — console.anthropic.com/settings/keys
-  Google Gemini           Gemini 2.0 Flash/Pro — aistudio.google.com/apikey
+  2. /wf-build-push           Docker 이미지 빌드 및 푸시 (커스텀 앱인 경우)
+  3. /wf-deploy               컨테이너 배포
+  4. /wf-status               실행 상태 확인
+  5. /wf-cost                 비용 확인
 
 요금:
   컴퓨팅   $0.04/코어/시간
@@ -142,11 +144,21 @@ API:      https://agent.willform.ai
 ### Additional Info
 
 If the user asks about a specific command, read the corresponding SKILL.md and provide a summary:
+- `/wf-help`: `skills/wf-help/SKILL.md`
 - `/wf-setup`: `skills/wf-setup/SKILL.md`
-- `/wf-deploy-openclaw`: `skills/wf-deploy-openclaw/SKILL.md`
+- `/wf-deploy`: `skills/wf-deploy/SKILL.md`
+- `/wf-template`: `skills/wf-template/SKILL.md`
 - `/wf-build-push`: `skills/wf-build-push/SKILL.md`
 - `/wf-status`: `skills/wf-status/SKILL.md`
 - `/wf-logs`: `skills/wf-logs/SKILL.md`
+- `/wf-monitor`: `skills/wf-monitor/SKILL.md`
+- `/wf-diagnose`: `skills/wf-diagnose/SKILL.md`
+- `/wf-namespace`: `skills/wf-namespace/SKILL.md`
+- `/wf-scale`: `skills/wf-scale/SKILL.md`
+- `/wf-env`: `skills/wf-env/SKILL.md`
+- `/wf-domain`: `skills/wf-domain/SKILL.md`
 - `/wf-cost`: `skills/wf-cost/SKILL.md`
+- `/wf-credits`: `skills/wf-credits/SKILL.md`
+- `/wf-agent`: `skills/wf-agent/SKILL.md`
 
 If the API key is not configured yet, suggest running `/wf-setup` first.

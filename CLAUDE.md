@@ -12,11 +12,22 @@ Claude Code plugin for Willform Agent — deploy, monitor, and manage K8s worklo
 
 ```
 skills/
-  wf-*/SKILL.md        — Slash commands (user-invocable: true)
-  willform-deploy/     — Deploy workflow reference skill
-  dockerfile-build/    — Dockerfile + GHCR reference skill
-  deploy-monitoring/   — Status/logs reference skill
-  cost-tracking/       — Pricing reference skill
+  wf-help/             — All commands + quick start
+  wf-setup/            — API key + language config
+  wf-deploy/           — Deploy any container interactively
+  wf-template/         — Browse and deploy from templates
+  wf-build-push/       — Dockerfile + GHCR/Docker Hub push
+  wf-status/           — Deployment status
+  wf-logs/             — Container logs
+  wf-monitor/          — Deployment health check + diagnosis
+  wf-diagnose/         — Deep diagnosis with logs + events
+  wf-namespace/        — Namespace CRUD
+  wf-scale/            — Scale, stop, restart, delete deployments
+  wf-env/              — Environment variable management
+  wf-domain/           — Custom domains + expose/unexpose
+  wf-cost/             — Credit balance + burn rate
+  wf-credits/          — Deposit options + tx verification
+  wf-agent/            — Willy AI agent interaction
 agents/
   willform-ops.md      — Multi-step ops agent
 hooks/
@@ -27,25 +38,33 @@ scripts/
 
 ## Slash Commands
 
-7 commands registered via `skills/{name}/SKILL.md` with `user-invocable: true`:
+16 commands registered via `skills/{name}/SKILL.md` with `user-invocable: true`:
 
 | Command | Description |
 |---------|-------------|
 | `/wf-help` | All commands + quick start |
 | `/wf-setup` | API key + language config |
-| `/wf-deploy-openclaw` | Deploy OpenClaw agent with Telegram + multi-provider LLM |
+| `/wf-deploy` | Deploy any container with interactive configuration |
+| `/wf-template` | Browse and deploy from templates |
 | `/wf-build-push` | Dockerfile + GHCR/Docker Hub push |
 | `/wf-status` | Deployment status |
 | `/wf-logs` | Container logs |
+| `/wf-monitor` | Deployment health check + diagnosis |
+| `/wf-diagnose` | Deep diagnosis with logs, events, and fixes |
+| `/wf-namespace` | Namespace CRUD (list, create, update, delete) |
+| `/wf-scale` | Scale, stop, restart, or delete deployments |
+| `/wf-env` | View or update environment variables |
+| `/wf-domain` | Custom domains + expose/unexpose |
 | `/wf-cost` | Credit balance + burn rate |
+| `/wf-credits` | Deposit options + transaction verification |
+| `/wf-agent` | Willy AI agent interaction |
 
 ## Conventions
 
-- All commands load config via `source "${CLAUDE_PLUGIN_ROOT}/scripts/wf-api.sh" && wf_load_config`
+- All commands load config via `source "${CLAUDE_PLUGIN_ROOT}/scripts/wf-api.sh" && wf_load_config` (except `/wf-setup`, which creates the config)
 - User config stored in `~/.claude/willform-plugins.local.md` (gitignored via `*.local.md`)
 - Config fields: `api_key`, `base_url`, `language` (en/ko)
-- Language check: `WF_LANGUAGE` env var set by `wf_load_config`. All commands support en/ko output
-- Language guidelines: `skills/willform-deploy/references/language-guidelines.md`
+- Language: Each skill checks `WF_LANGUAGE` from config (en/ko)
 - API base URL default: `https://agent.willform.ai`
 - Auth header: `Authorization: Bearer wf_sk_*`
 
@@ -59,12 +78,18 @@ scripts/
 ## Adding a New Command
 
 1. Create `skills/{command-name}/SKILL.md` with frontmatter
-2. Add Language section (check `WF_LANGUAGE`, reference language-guidelines.md)
+2. Add Language section (check `WF_LANGUAGE` from config, support en/ko output)
 3. Use `source "${CLAUDE_PLUGIN_ROOT}/scripts/wf-api.sh" && wf_load_config` as first step
 4. Update `/wf-help` SKILL.md command table
 5. Update README.md command table
 
+## API Access Patterns
+
+- **REST**: `wf_get`, `wf_post`, `wf_put`, `wf_delete` — for standard CRUD endpoints
+- **MCP**: `wf_mcp <tool> '<args>'` — for tools with no REST equivalent (preflight, agent ops, env update, chart list)
+- MCP endpoint returns SSE; `wf_mcp` handles parsing automatically
+
 ## Related Project
 
 - Willform Agent (`~/Projects/willform-agent`): The platform this plugin targets (has MCP server at /api/mcp)
-- REST API docs: `skills/willform-deploy/references/api-reference.md`
+- REST API: All skills use `wf-api.sh` helper to call `https://agent.willform.ai` endpoints

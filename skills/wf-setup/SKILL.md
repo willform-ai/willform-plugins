@@ -5,10 +5,14 @@ allowed-tools: Bash, Read, Write, AskUserQuestion
 user-invocable: true
 ---
 
-# /wf-setup — Willform Agent API Key Setup
+# /wf-setup -- Willform Agent API Key Setup
 
 ## Goal
 Save the user's Willform Agent API key and preferences to `~/.claude/willform-plugins.local.md` so all `/wf-*` commands can authenticate and localize automatically.
+
+## Language
+
+This skill handles language selection directly in Step 2 below (since it creates the config file that other skills read `WF_LANGUAGE` from).
 
 ## Steps
 

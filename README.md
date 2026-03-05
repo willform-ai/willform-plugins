@@ -28,48 +28,61 @@ You'll need a Willform Agent API key (`wf_sk_*`). Get one from the [dashboard](h
 
 ## Commands
 
+**Getting Started**
+
 | Command | Description |
 |---------|-------------|
 | `/wf-help` | Show all commands and quick start guide |
 | `/wf-setup` | Configure API key, base URL, and language |
-| `/wf-deploy-openclaw` | Deploy an OpenClaw AI agent with soul presets |
+
+**Deploy**
+
+| Command | Description |
+|---------|-------------|
+| `/wf-deploy` | Deploy any container with interactive configuration |
+| `/wf-template` | Browse and deploy from pre-built templates |
 | `/wf-build-push` | Build Docker image and push to GHCR or Docker Hub |
-| `/wf-status` | Check deployment status |
-| `/wf-status <name>` | Detailed status for a specific deployment |
+
+**Monitor**
+
+| Command | Description |
+|---------|-------------|
+| `/wf-status` | Check deployment status (all or specific) |
 | `/wf-logs <name>` | View container logs |
+| `/wf-monitor` | Deployment health check and issue diagnosis |
+| `/wf-diagnose <name>` | Deep diagnosis with logs, events, and fixes |
+
+**Manage**
+
+| Command | Description |
+|---------|-------------|
+| `/wf-namespace` | List, create, update, or delete namespaces |
+| `/wf-scale <name>` | Scale, stop, restart, or delete a deployment |
+| `/wf-env <name>` | View or update environment variables |
+| `/wf-domain` | Expose deployments and manage custom domains |
+
+**Billing**
+
+| Command | Description |
+|---------|-------------|
 | `/wf-cost` | Credit balance and burn rate estimate |
+| `/wf-credits` | Deposit options and transaction verification |
+
+**Agent**
+
+| Command | Description |
+|---------|-------------|
+| `/wf-agent` | Interact with Willy AI agent |
 
 ## Quick Start
 
 ```
 /wf-setup                  # Set your API key
-/wf-deploy-openclaw        # Deploy an AI agent
+/wf-deploy                 # Deploy a container
 /wf-status                 # Verify it's running
+/wf-monitor                # Health check and diagnose issues
 /wf-cost                   # Check your spending
 ```
-
-## OpenClaw Soul Presets
-
-`/wf-deploy-openclaw` includes personality presets that pre-configure the agent's expertise:
-
-- **real-estate-expert** — Property valuation, market analysis, ROI projections
-- **stock-investment-expert** — Fundamental/technical analysis, portfolio management
-- **legal-assistant** — Contract analysis, compliance, corporate law
-- **coding-mentor** — Guided learning, code review, project-based teaching
-- **data-analyst** — Statistical analysis, SQL, visualization
-- **writing-coach** — Editing, content strategy, style improvement
-- **custom** — Start from scratch with your own system prompt
-
-## Skills (Reference)
-
-These skills provide context for Claude when working with Willform:
-
-| Skill | Description |
-|-------|-------------|
-| `willform-deploy` | Deployment workflow and REST API reference |
-| `dockerfile-build` | Dockerfile templates and registry authentication (GHCR, Docker Hub) |
-| `deploy-monitoring` | Status interpretation and diagnostic guide |
-| `cost-tracking` | Pricing tables and cost calculation |
 
 ## Language
 

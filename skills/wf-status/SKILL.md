@@ -5,13 +5,13 @@ allowed-tools: Bash, Read
 user-invocable: true
 ---
 
-# Check Deployment Status
+# /wf-status -- Check Deployment Status
 
 Check the status of deployments on Willform Agent.
 
 ## Language
 
-After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English if `en` or empty, Korean if `ko`. See `skills/willform-deploy/references/language-guidelines.md` for output conventions. If not set, ask the user to choose (English/한국어) and save to config.
+After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English if `en` or empty, Korean if `ko`. If not set, ask the user to choose (English/한국어) and save to config.
 
 ## Instructions
 
@@ -76,3 +76,9 @@ Credits:
 ```
 
 If the deployment is not found, show an error message along with the list of available deployments.
+
+## Error Handling
+
+- If API returns 401, suggest `/wf-setup` to reconfigure API key
+- If deployment not found, list available deployments
+- If no deployments exist, suggest `/wf-deploy` to create one

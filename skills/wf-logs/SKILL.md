@@ -5,13 +5,13 @@ allowed-tools: Bash, Read
 user-invocable: true
 ---
 
-# View Deployment Logs
+# /wf-logs -- View Deployment Logs
 
 Retrieve and display container logs for a deployment on Willform Agent.
 
 ## Language
 
-After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English if `en` or empty, Korean if `ko`. See `skills/willform-deploy/references/language-guidelines.md` for output conventions. If not set, ask the user to choose (English/한국어) and save to config.
+After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English if `en` or empty, Korean if `ko`. If not set, ask the user to choose (English/한국어) and save to config.
 
 ## Instructions
 
@@ -50,3 +50,9 @@ response=$(wf_get "/api/deploy/${DEPLOY_ID}/logs")
 5. **Error handling**:
    - If the API returns `success: false`, display the error message
    - If the deployment status is `stopped` or `suspended`, note that logs may not be available since no pods are running
+
+## Error Handling
+
+- If API returns 401, suggest `/wf-setup` to reconfigure API key
+- If deployment not found, list available deployments
+- If deployment is stopped/suspended, note that no pods are running and logs may be unavailable

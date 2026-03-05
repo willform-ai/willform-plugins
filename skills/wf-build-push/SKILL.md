@@ -5,17 +5,25 @@ allowed-tools: Bash, Read, Write, Glob, AskUserQuestion
 user-invocable: true
 ---
 
-# Build & Push Docker Image
+# /wf-build-push -- Build & Push Docker Image
 
 Build a Docker image from the current project and push it to GitHub Container Registry (GHCR) or Docker Hub for deployment on Willform Agent.
 
 ## Language
 
-After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English if `en` or empty, Korean if `ko`. See `skills/willform-deploy/references/language-guidelines.md` for output conventions. If not set, ask the user to choose (English/한국어) and save to config.
+After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English if `en` or empty, Korean if `ko`. If not set, ask the user to choose (English/한국어) and save to config.
 
 ## Instructions
 
 Follow these steps in order. Stop and report to the user if any step fails.
+
+### Step 0: Load config
+
+```bash
+source "${CLAUDE_PLUGIN_ROOT}/scripts/wf-api.sh" && wf_load_config 2>/dev/null || true
+```
+
+This loads `WF_LANGUAGE` for localized output. Auth is not required since this skill uses Docker CLI, not the Willform API.
 
 ### Step 1: Select Registry
 
@@ -28,13 +36,13 @@ Store the selection for subsequent steps: `REGISTRY=ghcr` or `REGISTRY=dockerhub
 
 ### Step 2: Verify Registry Authentication
 
-Run the unified auth check script:
+Verify registry authentication:
 
-```bash
-bash "${CLAUDE_PLUGIN_ROOT}/skills/dockerfile-build/scripts/registry-auth-check.sh" "${REGISTRY}"
-```
+**For GHCR**: Check if `gh auth status` succeeds or if a `GITHUB_TOKEN` env var with `write:packages` scope is available. Try `docker login ghcr.io` if needed.
 
-If the script exits non-zero, show the user the authentication options from the output and stop. Do not proceed without registry auth.
+**For Docker Hub**: Check if `docker login` credentials exist by running `docker info 2>/dev/null | grep -q Username`. If not logged in, prompt the user to run `docker login`.
+
+If auth cannot be verified, show the user the authentication options and stop. Do not proceed without registry auth.
 
 ### Step 3: Verify Docker is Running
 
@@ -70,7 +78,7 @@ If the project type cannot be determined, ask the user.
 
 **If `Dockerfile` exists**: Ask the user whether to use the existing Dockerfile or generate a new one.
 
-**If `Dockerfile` does not exist**: Generate one using the appropriate template from the skill reference at `skills/dockerfile-build/references/dockerfile-patterns.md`. Adapt the template to match the actual project structure:
+**If `Dockerfile` does not exist**: Generate one based on the detected project type. Adapt the template to match the actual project structure:
 - Check the actual build output directory (e.g., `dist`, `build`, `.next`, `out`)
 - Check the actual entry point file
 - Check the port used in the application code
@@ -181,8 +189,7 @@ Then output the result with registry-specific deploy guidance:
 Image pushed successfully: ghcr.io/{owner}/{repo}:{tag}
 
 Deploy with:
-  /wf-deploy-openclaw  (for OpenClaw agents)
-  Or use the Willform deploy skill for custom deployments
+  /wf-deploy  (deploy to Willform Agent)
 
 Image reference (copy this): ghcr.io/{owner}/{repo}:{tag}
 
@@ -199,8 +206,7 @@ registryAuth (for Willform deploy API):
 Image pushed successfully: docker.io/{username}/{repo}:{tag}
 
 Deploy with:
-  /wf-deploy-openclaw  (for OpenClaw agents)
-  Or use the Willform deploy skill for custom deployments
+  /wf-deploy  (deploy to Willform Agent)
 
 Image reference (copy this): docker.io/{username}/{repo}:{tag}
 
