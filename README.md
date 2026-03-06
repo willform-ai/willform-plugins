@@ -4,14 +4,11 @@ Claude Code plugin for [Willform Agent](https://agent.willform.ai) — deploy, m
 
 ## Install
 
-Add the marketplace and install the plugin:
-
 ```
-/plugin marketplace add willform-ai/willform-plugins
-/plugin install willform@willform-plugins
+/install-plugin willform-ai/willform-plugins
 ```
 
-Or use directly from a local clone:
+Or clone and use locally:
 
 ```bash
 git clone https://github.com/willform-ai/willform-plugins.git
@@ -26,16 +23,24 @@ claude --plugin-dir willform-plugins
 
 You'll need a Willform Agent API key (`wf_sk_*`). Get one from the [dashboard](https://agent.willform.ai/dashboard).
 
+Configuration is stored in `~/.claude/willform-plugins.local.md`:
+
+```
+api_key: wf_sk_your_key_here
+base_url: https://agent.willform.ai
+language: en
+```
+
 ## Commands
 
-**Getting Started**
+### Getting Started
 
 | Command | Description |
 |---------|-------------|
 | `/wf-help` | Show all commands and quick start guide |
 | `/wf-setup` | Configure API key, base URL, and language |
 
-**Deploy**
+### Deploy
 
 | Command | Description |
 |---------|-------------|
@@ -43,7 +48,7 @@ You'll need a Willform Agent API key (`wf_sk_*`). Get one from the [dashboard](h
 | `/wf-template` | Browse and deploy from pre-built templates |
 | `/wf-build-push` | Build Docker image and push to GHCR or Docker Hub |
 
-**Monitor**
+### Monitor
 
 | Command | Description |
 |---------|-------------|
@@ -52,7 +57,7 @@ You'll need a Willform Agent API key (`wf_sk_*`). Get one from the [dashboard](h
 | `/wf-monitor` | Deployment health check and issue diagnosis |
 | `/wf-diagnose <name>` | Deep diagnosis with logs, events, and fixes |
 
-**Manage**
+### Manage
 
 | Command | Description |
 |---------|-------------|
@@ -61,14 +66,14 @@ You'll need a Willform Agent API key (`wf_sk_*`). Get one from the [dashboard](h
 | `/wf-env <name>` | View or update environment variables |
 | `/wf-domain` | Expose deployments and manage custom domains |
 
-**Billing**
+### Billing
 
 | Command | Description |
 |---------|-------------|
 | `/wf-cost` | Credit balance and burn rate estimate |
 | `/wf-credits` | Deposit options and transaction verification |
 
-**Agent**
+### Agent
 
 | Command | Description |
 |---------|-------------|
@@ -84,14 +89,41 @@ You'll need a Willform Agent API key (`wf_sk_*`). Get one from the [dashboard](h
 /wf-cost                   # Check your spending
 ```
 
+## Architecture
+
+```
+skills/                     # Slash commands (SKILL.md per command)
+  wf-help/
+  wf-setup/
+  wf-deploy/
+  ...
+agents/
+  willform-ops.md           # Multi-step ops agent
+hooks/
+  hooks.json                # SessionStart hook
+scripts/
+  wf-api.sh                 # Shared API helper
+```
+
+Each command is a standalone `SKILL.md` file with YAML frontmatter. The shared `wf-api.sh` script handles authentication, HTTP methods, and MCP tool calls.
+
+### API Access
+
+- **REST** — standard CRUD via `wf_get`, `wf_post`, `wf_put`, `wf_delete`
+- **MCP** — tool calls via `wf_mcp` for operations with no REST equivalent (preflight, agent ops, env update)
+
 ## Language
 
-All commands support English and Korean. Set your preference during `/wf-setup` or change it anytime by editing `~/.claude/willform-plugins.local.md`:
+All commands support English and Korean. Set your preference during `/wf-setup` or edit `~/.claude/willform-plugins.local.md`:
 
 ```
 language: en   # or ko
 ```
 
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to add new commands.
+
 ## License
 
-MIT
+[MIT](./LICENSE)
