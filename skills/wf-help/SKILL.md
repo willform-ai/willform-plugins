@@ -73,8 +73,8 @@ Quick Start:
 
 Pricing:
   Compute  $0.04/core/hr
-  Memory   $0.005/GB/hr
-  Storage  $0.0001/GB/hr
+  Memory   $0.01/GB/hr
+  Storage  $0.00018/GB/hr
 
 Note: Minimum runway policy — you need at least 2 hours of runway
   (balance / burn rate >= 2h) to create or expand resources.
@@ -130,8 +130,8 @@ Willform Agent — Kubernetes 배포 CLI 플러그인
 
 요금:
   컴퓨팅   $0.04/코어/시간
-  메모리   $0.005/GB/시간
-  스토리지 $0.0001/GB/시간
+  메모리   $0.01/GB/시간
+  스토리지 $0.00018/GB/시간
 
 참고: 최소 runway 정책 — 리소스를 생성하거나 확장하려면
   최소 2시간의 runway(잔액 / 소비율 >= 2시간)가 필요합니다.

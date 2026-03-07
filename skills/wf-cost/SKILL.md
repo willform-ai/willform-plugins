@@ -36,18 +36,18 @@ After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English
 
    | Chart Type | Cores | Memory (GB) | Hourly Cost |
    |------------|-------|-------------|-------------|
-   | web | 0.1 | 0.125 | $0.004625 |
-   | database | 0.25 | 0.5 | $0.0125 |
-   | queue | 0.25 | 0.5 | $0.0125 |
-   | cache | 0.1 | 0.25 | $0.00525 |
-   | storage | 0.25 | 0.5 | $0.0125 |
-   | worker | 0.1 | 0.25 | $0.00525 |
-   | cronjob | 0.1 | 0.125 | $0.004625 |
-   | static-site | 0.05 | 0.0625 | $0.002313 |
+   | web | 0.1 | 0.125 | $0.005250 |
+   | database | 0.25 | 0.5 | $0.015000 |
+   | queue | 0.25 | 0.5 | $0.015000 |
+   | cache | 0.1 | 0.25 | $0.006500 |
+   | storage | 0.25 | 0.5 | $0.015000 |
+   | worker | 0.1 | 0.25 | $0.006500 |
+   | cronjob | 0.1 | 0.125 | $0.005250 |
+   | static-site | 0.05 | 0.0625 | $0.002625 |
 
    Formulas:
    - Compute cost = cores * $0.04
-   - Memory cost = memory_gb * $0.005
+   - Memory cost = memory_gb * $0.01
    - Hourly cost = compute + memory (storage not included in default estimates)
 
 5. Calculate totals:
