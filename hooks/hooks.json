@@ -1,13 +1,10 @@
 {
-  "hooks": [
-    {
-      "matcher": "SessionStart",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/load-willform-context.sh"
-        }
-      ]
-    }
-  ]
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/load-willform-context.sh"
+      }
+    ]
+  }
 }
