@@ -28,6 +28,7 @@ skills/
   wf-cost/             — Credit balance + burn rate
   wf-credits/          — Deposit options + tx verification
   wf-agent/            — Willy AI agent interaction
+  openclaw-willform-deploy/ — OpenClaw skill: deploy to Willform via natural language
 agents/
   willform-ops.md      — Multi-step ops agent
 hooks/
@@ -58,6 +59,16 @@ scripts/
 | `/wf-cost` | Credit balance + burn rate |
 | `/wf-credits` | Deposit options + transaction verification |
 | `/wf-agent` | Willy AI agent interaction |
+
+## OpenClaw Skill
+
+`skills/openclaw-willform-deploy/SKILL.md` is an OpenClaw-native skill (NOT a Claude Code slash command).
+It uses OpenClaw's SKILL.md format with `metadata.openclaw` frontmatter, not `user-invocable: true`.
+
+- Install on OpenClaw: `clawhub install willform-deploy` or paste GitHub URL in chat
+- Requires: `WF_API_KEY` env var, `curl`, `jq`
+- Uses `wf_mcp()` inline function to call Willform MCP endpoint via curl
+- Key flow: `deploy_plan` (natural language -> ordered steps) -> `deploy_create` -> `deploy_expose`
 
 ## Conventions
 
