@@ -163,9 +163,10 @@ Dry run — the following would be deployed:
 
 {for each entry in DEPLOYABLE}
   • {name}
-    Current URL: {url}
-    Transport:   {transport}
-    Env vars:    {comma-separated keys, or "(none)"}
+    Current URL:       {url}
+    Transport:         {transport}
+    Env vars:          {comma-separated keys, or "(none)"}
+    Health check path: {ENTRY_HEALTH_CHECK or "(disabled)"}
 ```
 Stop without making any API calls.
 
@@ -182,6 +183,15 @@ Examples: ghcr.io/myorg/my-mcp-server:latest, registry.willform.ai/myns/my-serve
 Store the result as `ENTRY_IMAGE` for that entry.
 
 If the user provides an empty value or skips, skip that entry and add it to the skipped list.
+
+Then, for each entry with a confirmed image, optionally ask for a health check path:
+
+```
+use AskUserQuestion: "MCP server '{name}' — health check path? (press Enter to skip, or enter a path like '/health')
+MCP servers have no standard health endpoint — leave blank unless your server exposes one."
+```
+
+Store the result as `ENTRY_HEALTH_CHECK` for that entry. If empty or not provided, set to empty string (health check disabled).
 
 ### Step 5: Resolve namespace
 
@@ -277,7 +287,7 @@ body = {
   'chartType': 'web',
   'port': 8080,
   'env': ${ENTRY_ENV_JSON},
-  'healthCheckPath': None
+  'healthCheckPath': '${ENTRY_HEALTH_CHECK}' if '${ENTRY_HEALTH_CHECK}' else None
 }
 print(json.dumps(body))
 ")
