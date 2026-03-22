@@ -13,6 +13,7 @@ Parse an `apm.yml` manifest (Microsoft Agent Package Manager format) and deploy 
 
 Supports:
 - `--apm-file <path>` — path to apm.yml (default: `./apm.yml`)
+- `--namespace <name-or-id>` — skip interactive namespace selection (useful in agent/CI contexts)
 - `--dry-run` — parse and show what would be deployed, without making any API calls
 
 **v1 scope:** Only `dependencies.mcp[]` entries where `registry: false` and `url` is present (streamable-http, sse, or http transport). Registry-backed entries (e.g. `io.github.xxx/xxx`) are skipped with a clear warning — those are locally executed servers, not Willform-hosted. Stdio-only entries (no `url`) are also skipped.
@@ -38,10 +39,12 @@ If this fails, tell the user to run `/wf-setup` first and stop.
 From `$ARGUMENTS`, extract:
 - `APM_FILE` — value of `--apm-file <path>`, default `./apm.yml`
 - `DRY_RUN` — `true` if `--dry-run` flag is present, otherwise `false`
+- `NS_ARG` — value of `--namespace <name-or-id>`, default empty (interactive selection)
 
 ```bash
 APM_FILE="./apm.yml"
 DRY_RUN="false"
+NS_ARG=""
 
 args="$ARGUMENTS"
 while [[ -n "$args" ]]; do
@@ -49,6 +52,10 @@ while [[ -n "$args" ]]; do
     --apm-file*)
       APM_FILE=$(echo "$args" | sed 's/--apm-file[= ]\([^ ]*\).*/\1/')
       args=$(echo "$args" | sed 's/--apm-file[= ][^ ]*//')
+      ;;
+    --namespace*)
+      NS_ARG=$(echo "$args" | sed 's/--namespace[= ]\([^ ]*\).*/\1/')
+      args=$(echo "$args" | sed 's/--namespace[= ][^ ]*//')
       ;;
     *--dry-run*)
       DRY_RUN="true"
@@ -178,20 +185,37 @@ If the user provides an empty value or skips, skip that entry and add it to the 
 
 ### Step 5: Resolve namespace
 
-```bash
-NS_RESPONSE=$(wf_get "/api/namespaces")
-```
-
-Parse the `data` array. For each namespace, show: `name`, `status`, remaining CPU/memory.
-
-- If namespaces exist, ask the user to select one or create a new one.
-- If creating a new namespace, ask for name and resource allocation (default: 2 cores, 4GB memory):
+If `--namespace <name-or-id>` was provided via `NS_ARG`, resolve it without prompting:
 
 ```bash
-ns_body=$(python3 -c "import json; print(json.dumps({'name': '${NS_NAME}', 'allocatedCores': ${CORES}, 'allocatedMemoryGb': ${MEMORY}}))")
-NS_RESULT=$(wf_post "/api/namespaces" "$ns_body")
-NAMESPACE_ID=$(wf_json_field "$NS_RESULT" "data.id")
+if [[ -n "$NS_ARG" ]]; then
+  NS_RESPONSE=$(wf_get "/api/namespaces")
+  NAMESPACE_ID=$(echo "$NS_RESPONSE" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+target = '${NS_ARG}'.lower()
+for ns in d.get('data', []):
+    if ns.get('id') == target or ns.get('name', '').lower() == target:
+        print(ns['id'])
+        break
+" 2>/dev/null)
+  if [[ -z "$NAMESPACE_ID" ]]; then
+    echo "Error: namespace '${NS_ARG}' not found. Run /wf-namespace to list available namespaces."
+    exit 1
+  fi
+else
+  # Interactive selection
+  NS_RESPONSE=$(wf_get "/api/namespaces")
+  # Parse the data array. For each namespace, show: name, status, remaining CPU/memory.
+  # Ask the user to select one or create a new one.
+  # If creating a new namespace, ask for name and resource allocation (default: 2 cores, 4GB memory):
+  ns_body=$(python3 -c "import json; print(json.dumps({'name': '${NS_NAME}', 'allocatedCores': ${CORES}, 'allocatedMemoryGb': ${MEMORY}}))")
+  NS_RESULT=$(wf_post "/api/namespaces" "$ns_body")
+  NAMESPACE_ID=$(wf_json_field "$NS_RESULT" "data.id")
+fi
 ```
+
+Tip: for non-interactive (agent/CI) use, pass `--namespace <name>` to skip the prompt.
 
 ### Step 6: Resolve placeholder env vars (interactive)
 
@@ -253,7 +277,7 @@ body = {
   'chartType': 'web',
   'port': 8080,
   'env': ${ENTRY_ENV_JSON},
-  'healthCheckPath': '/health'
+  'healthCheckPath': None
 }
 print(json.dumps(body))
 ")
