@@ -109,7 +109,7 @@ for entry in mcp:
     transport = entry.get('transport', '')
     env = entry.get('env', {}) or {}
 
-    if registry is True or (isinstance(registry, str) and registry.lower() != 'false'):
+    if registry is not False:
         skipped.append({'name': name, 'reason': 'registry-backed servers are not deployable (local execution only)'})
         continue
 
@@ -306,7 +306,7 @@ echo "  → Updating {name} (existing)..."
 
 ### Step 8: Poll for readiness
 
-For each deployment (skip polling for update/restart — they reach running automatically):
+Poll ALL deployments (new AND update/restart) — image pull, container recreate, and healthcheck all take time regardless of whether it is a new deploy or a restart with a new image. Silent failures are possible without polling.
 
 ```bash
 STATUS="unknown"
@@ -321,6 +321,8 @@ for i in $(seq 1 24); do
   sleep 5
 done
 ```
+
+Max wait: 120s (24 × 5s). If still not running after timeout, report status and suggest `/wf-logs {name}`.
 
 ### Step 9: Expose (if not already exposed)
 
