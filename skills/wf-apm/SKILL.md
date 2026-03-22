@@ -166,7 +166,7 @@ Dry run — the following would be deployed:
     Current URL:       {url}
     Transport:         {transport}
     Env vars:          {comma-separated keys, or "(none)"}
-    Health check path: {ENTRY_HEALTH_CHECK or "(disabled)"}
+    Health check:      {HEALTH_CHECK_PATH if set, else "(disabled)"}
 ```
 Stop without making any API calls.
 
@@ -187,11 +187,11 @@ If the user provides an empty value or skips, skip that entry and add it to the 
 Then, for each entry with a confirmed image, optionally ask for a health check path:
 
 ```
-use AskUserQuestion: "MCP server '{name}' — health check path? (press Enter to skip, or enter a path like '/health')
+use AskUserQuestion: "MCP server '{name}' — health check path? (Enter to skip, e.g. /health)
 MCP servers have no standard health endpoint — leave blank unless your server exposes one."
 ```
 
-Store the result as `ENTRY_HEALTH_CHECK` for that entry. If empty or not provided, set to empty string (health check disabled).
+Store result as `HEALTH_CHECK_PATH` for that entry. Empty string = disabled (no health check).
 
 ### Step 5: Resolve namespace
 
@@ -287,8 +287,9 @@ body = {
   'chartType': 'web',
   'port': 8080,
   'env': ${ENTRY_ENV_JSON},
-  'healthCheckPath': '${ENTRY_HEALTH_CHECK}' if '${ENTRY_HEALTH_CHECK}' else None
 }
+if '${HEALTH_CHECK_PATH:-}':
+    body['healthCheckPath'] = '${HEALTH_CHECK_PATH}'
 print(json.dumps(body))
 ")
 RESULT=$(wf_post "/api/deploy" "$DEPLOY_BODY")
