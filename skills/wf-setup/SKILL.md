@@ -41,6 +41,12 @@ language: <en or ko>
 
 Path: `~/.claude/willform-plugins.local.md`
 
+   Then set restrictive permissions (contains API key):
+
+```bash
+chmod 600 ~/.claude/willform-plugins.local.md
+```
+
 7. Verify connectivity by calling the health endpoint:
 
 ```bash

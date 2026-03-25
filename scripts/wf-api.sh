@@ -64,10 +64,17 @@ _wf_request() {
     return 1
   }
 
+  # Extract HTTP status code (last line) and body (everything before it).
+  # Using bash parameter expansion instead of tail/sed for robustness
+  # with empty responses and multi-line bodies.
   local http_code
-  http_code=$(echo "$response" | tail -1)
+  http_code="${response##*$'\n'}"
   local body_text
-  body_text=$(echo "$response" | sed '$d')
+  if [[ "$response" == *$'\n'* ]]; then
+    body_text="${response%$'\n'*}"
+  else
+    body_text=""
+  fi
 
   if [[ "$http_code" -ge 400 ]]; then
     local error_msg
