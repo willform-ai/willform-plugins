@@ -1,0 +1,26 @@
+{
+  "$schema": "./risk-tier-schema.json",
+  "version": "1.0.0",
+  "repo": "willform-plugins",
+  "tiers": {
+    "HIGH": {
+      "paths": [
+        "skills/**",
+        "scripts/**"
+      ],
+      "rules": [
+        "Public repo — no secrets in skill files"
+      ]
+    },
+    "MEDIUM": {
+      "paths": [
+        "config/**"
+      ],
+      "rules": []
+    },
+    "LOW": {
+      "paths": ["*.md", "LICENSE"],
+      "rules": []
+    }
+  }
+}
