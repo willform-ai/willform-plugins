@@ -15,7 +15,7 @@ Check deployment health, diagnose common issues, and provide actionable troubles
 
 After loading config, check `WF_LANGUAGE` (set by `wf_load_config`). Use English if `en` or empty, Korean if `ko`. If not set, ask the user to choose (English/한국어) and save to config.
 
-## Steps
+## Instructions
 
 ### 1. Load API config
 

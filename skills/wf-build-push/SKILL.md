@@ -7,6 +7,8 @@ user-invocable: true
 
 # /wf-build-push -- Build & Push Docker Image
 
+## Goal
+
 Build a Docker image from the current project and push it to GitHub Container Registry (GHCR) or Docker Hub for deployment on Willform Agent.
 
 ## Language
