@@ -86,8 +86,6 @@ user-invocable: true
 
 **Heading format:** `# /wf-{command} -- {Title}` (h1, slash prefix, double dash separator)
 
-**OpenClaw skills** use a different format — `metadata.openclaw` frontmatter instead of `user-invocable: true`, and an inline `wf_mcp()` function instead of sourcing `wf-api.sh`. See `skills/openclaw-willform-deploy/SKILL.md` for the pattern.
-
 ### wf-api.sh Usage
 
 Every skill (except `/wf-setup`) must start with:

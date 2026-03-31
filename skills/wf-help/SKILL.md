@@ -64,6 +64,9 @@ Billing:
 Agent:
   /wf-agent              Interact with Willy AI agent
 
+Integration:
+  /wf-apm                Deploy MCP servers from apm.yml manifest
+
 Quick Start:
   1. /wf-setup                Set your Willform API key
   2. /wf-build-push           Build and push your Docker image (if custom)
@@ -121,6 +124,9 @@ Willform Agent — Kubernetes 배포 CLI 플러그인
 에이전트:
   /wf-agent              Willy AI 에이전트 상호작용
 
+통합:
+  /wf-apm                apm.yml 매니페스트에서 MCP 서버 배포
+
 빠른 시작:
   1. /wf-setup                Willform API 키 설정
   2. /wf-build-push           Docker 이미지 빌드 및 푸시 (커스텀 앱인 경우)
@@ -160,5 +166,6 @@ If the user asks about a specific command, read the corresponding SKILL.md and p
 - `/wf-cost`: `skills/wf-cost/SKILL.md`
 - `/wf-credits`: `skills/wf-credits/SKILL.md`
 - `/wf-agent`: `skills/wf-agent/SKILL.md`
+- `/wf-apm`: `skills/wf-apm/SKILL.md`
 
 If the API key is not configured yet, suggest running `/wf-setup` first.
