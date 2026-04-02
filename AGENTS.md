@@ -151,3 +151,27 @@ Validate with: `claude plugin validate .`
 - `docs:` — documentation-only changes
 - `chore:` — config, CI, non-functional changes
 - One logical change per commit
+
+## Code Factory Integration
+
+### Risk Tiers (from `.github/risk-tiers.json`)
+| Tier | Paths | CI | Review | Merge |
+|------|-------|----|--------|-------|
+| HIGH | `skills/**`, `scripts/**` | Full CI | 1 human + AI | Manual |
+| MEDIUM | `config/**` | Lint | AI only | Auto-merge eligible |
+| LOW | `*.md`, `LICENSE` | None | None | Auto-merge |
+
+**Public repo rule**: HIGH tier in this repo carries extra weight — any secret leak is immediately public. Scan every diff for API keys, tokens, and hardcoded credentials before approving.
+
+### Preflight Gate
+`preflight-gate.yml` classifies PR risk tier from changed file paths. Higher tiers trigger stricter CI and review requirements automatically.
+
+### Harness-Gap Workflow
+`harness-gap.yml` converts production incidents into regression tests:
+1. `repository_dispatch` with `event_type: "production-incident"` creates an Issue
+2. Claude generates a regression test PR targeting the incident scenario
+3. Standard review protocol applies to the auto-generated PR
+
+### Branch Protection
+- Required review: 1, `dismiss_stale_reviews: true` (SHA discipline — new commits invalidate approvals)
+- Status checks: Preflight Gate must pass before merge
