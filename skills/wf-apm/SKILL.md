@@ -66,6 +66,22 @@ while [[ -n "$args" ]]; do
 done
 ```
 
+### Step 2.5: Check python3 and PyYAML
+
+```bash
+if ! command -v python3 &>/dev/null; then
+  echo "Error: Required: python3 and PyYAML. Install with: pip3 install pyyaml"
+  exit 1
+fi
+
+if ! python3 -c "import yaml" 2>/dev/null; then
+  echo "Error: Required: python3 and PyYAML. Install with: pip3 install pyyaml"
+  exit 1
+fi
+```
+
+If either check fails, stop immediately — do not proceed to YAML parsing.
+
 ### Step 3: Read and parse apm.yml
 
 ```bash
