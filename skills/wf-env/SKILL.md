@@ -1,6 +1,6 @@
 ---
 name: wf-env
-description: Manage environment variables for deployments on Willform Agent
+description: Manage environment variables for deployments on Willform
 allowed-tools: Bash, Read, AskUserQuestion
 user-invocable: true
 ---
@@ -9,7 +9,7 @@ user-invocable: true
 
 ## Goal
 
-View and update environment variables for a deployment on Willform Agent. Supports merge (add/update without removing existing) and replace (overwrite all) modes.
+View and update environment variables for a deployment on Willform. Supports merge (add/update without removing existing) and replace (overwrite all) modes.
 
 ## Language
 
@@ -47,17 +47,19 @@ response=$(wf_get "/api/deploy/${DEPLOY_ID}")
 env_vars=$(echo "$response" | jq '.data.env // {}')
 ```
 
-Display in a readable format:
+Display in a readable format with values **redacted by default**:
 
 ```
 Environment Variables: {deployment_name}
 
-  DATABASE_URL=postgres://...
-  NODE_ENV=production
-  PORT=3000
+  DATABASE_URL=<redacted>
+  NODE_ENV=<redacted>
+  PORT=<redacted>
 ```
 
 If no env vars are set, show "(none)".
+
+Do **not** print raw secret values into the chat/session transcript by default. If the user explicitly needs a value revealed, ask for confirmation first and reveal only the requested key.
 
 #### Set env vars (merge)
 
@@ -84,7 +86,7 @@ wf_mcp "deploy_update_env" "{\"deploymentId\":\"${DEPLOY_ID}\",\"env\":${ENV_JSO
 
 ### Step 5: Report result
 
-Show the updated env vars and note that the deployment will restart.
+Show the updated env var **keys** (not raw values) and note that the deployment will restart.
 
 Suggest `/wf-status <name>` to verify the restart completes.
 
