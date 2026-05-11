@@ -1,6 +1,6 @@
 ---
 name: wf-agent
-description: Interact with Willy AI agents on Willform Agent
+description: Interact with Willy AI agents on Willform
 allowed-tools: Bash, Read, AskUserQuestion
 user-invocable: true
 ---
@@ -9,7 +9,7 @@ user-invocable: true
 
 ## Goal
 
-Check Willy agent status, send prompts, invoke tools, and recover crashed agents on Willform Agent.
+Check Willy agent status, send prompts, invoke tools, and recover crashed agents on Willform.
 
 ## Language
 

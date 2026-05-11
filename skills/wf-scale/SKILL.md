@@ -1,6 +1,6 @@
 ---
 name: wf-scale
-description: Scale, stop, restart, or delete deployments on Willform Agent
+description: Scale, stop, restart, or delete deployments on Willform
 allowed-tools: Bash, Read, AskUserQuestion
 user-invocable: true
 ---
@@ -9,7 +9,7 @@ user-invocable: true
 
 ## Goal
 
-Day-2 operations for deployments: scale replicas, stop, restart, or delete a deployment on Willform Agent.
+Day-2 operations for deployments: scale replicas, stop, restart, or delete a deployment on Willform.
 
 ## Language
 

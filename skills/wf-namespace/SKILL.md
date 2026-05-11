@@ -1,6 +1,6 @@
 ---
 name: wf-namespace
-description: Manage namespaces on Willform Agent
+description: Manage namespaces on Willform
 allowed-tools: Bash, Read, AskUserQuestion
 user-invocable: true
 ---
@@ -9,7 +9,7 @@ user-invocable: true
 
 ## Goal
 
-List, create, update, or delete namespaces on Willform Agent. Namespaces are isolated resource pools that contain deployments.
+List, create, update, or delete namespaces on Willform. Namespaces are isolated resource pools that contain deployments.
 
 ## Language
 

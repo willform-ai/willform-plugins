@@ -1,6 +1,6 @@
 ---
 name: wf-diagnose
-description: Diagnose deployment issues on Willform Agent
+description: Diagnose deployment issues on Willform
 allowed-tools: Bash, Read
 user-invocable: true
 ---

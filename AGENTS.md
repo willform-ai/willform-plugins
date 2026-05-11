@@ -54,7 +54,7 @@ Every slash command skill must follow this format:
 ```yaml
 ---
 name: wf-{command}
-description: {Imperative verb} {what it does} on Willform Agent
+description: {Imperative verb} {what it does} on Willform
 allowed-tools: Bash, Read[, Write, AskUserQuestion]
 user-invocable: true
 ---

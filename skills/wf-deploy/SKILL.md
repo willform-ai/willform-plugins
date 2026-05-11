@@ -1,6 +1,6 @@
 ---
 name: wf-deploy
-description: Deploy a container to Willform Agent with interactive configuration
+description: Deploy a container to Willform with interactive configuration
 allowed-tools: Bash, Read, Write, AskUserQuestion
 user-invocable: true
 ---
@@ -9,7 +9,7 @@ user-invocable: true
 
 ## Goal
 
-Deploy any container image to Willform Agent. Walks the user through configuration (name, image, chart type, resources), runs preflight checks, creates the deployment, and exposes it if applicable.
+Deploy any container image to Willform. Walks the user through configuration (name, image, chart type, resources), runs preflight checks, creates the deployment, and exposes it if applicable.
 
 ## Language
 

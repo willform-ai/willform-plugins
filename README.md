@@ -1,6 +1,6 @@
 # willform-plugins
 
-Claude Code plugin for [Willform Agent](https://agent.willform.ai) — deploy, monitor, and manage Kubernetes workloads from your terminal.
+Claude Code plugin for [Willform](https://willform.ai) — deploy, monitor, and manage workloads from your terminal.
 
 ## Install
 
@@ -21,13 +21,13 @@ claude --plugin-dir willform-plugins
 /wf-setup
 ```
 
-You'll need a Willform Agent API key (`wf_sk_*`). Get one from the [dashboard](https://agent.willform.ai/dashboard).
+You'll need a Willform API key (`wf_sk_*`). Get one from the [dashboard](https://willform.ai/dashboard).
 
 Configuration is stored in `~/.claude/willform-plugins.local.md`:
 
 ```
 api_key: wf_sk_your_key_here
-base_url: https://agent.willform.ai
+base_url: https://willform.ai
 language: en
 ```
 

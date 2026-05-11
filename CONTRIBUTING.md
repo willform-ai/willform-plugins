@@ -1,6 +1,6 @@
 # Contributing to willform-plugins
 
-Add new skills (slash commands) to the Willform Agent CLI plugin.
+Add new skills (slash commands) to the Willform CLI plugin.
 
 ## Skill Format
 
@@ -9,7 +9,7 @@ Each skill lives in `skills/{name}/SKILL.md` with YAML frontmatter:
 ```yaml
 ---
 name: wf-{command}
-description: {Imperative verb} {what it does} on Willform Agent
+description: {Imperative verb} {what it does} on Willform
 allowed-tools: Bash, Read[, Write, AskUserQuestion]
 user-invocable: true
 ---

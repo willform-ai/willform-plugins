@@ -1,6 +1,6 @@
 ---
 name: wf-credits
-description: Manage credits and deposits on Willform Agent
+description: Manage credits and deposits on Willform
 allowed-tools: Bash, Read, AskUserQuestion
 user-invocable: true
 ---
@@ -9,7 +9,7 @@ user-invocable: true
 
 ## Goal
 
-Check credit balance, view deposit options, and verify deposits on Willform Agent. Guides users through the deposit flow for topping up their account.
+Check credit balance, view deposit options, and verify deposits on Willform. Guides users through the deposit flow for topping up their account.
 
 ## Language
 
@@ -75,7 +75,7 @@ Deposit Options:
     Address: {deposit_address}
 
   Fiat:
-    Visit https://agent.willform.ai/dashboard to pay with card
+    Visit https://willform.ai/dashboard to pay with card
 ```
 
 #### Verify deposit

@@ -30,7 +30,7 @@ Display the following guide in the user's preferred language.
 ### English Version
 
 ```
-Willform Agent — CLI Plugin for Kubernetes Deployment
+Willform — CLI Plugin for Infrastructure Deployment
 
 What You Need:
   1. Willform API key     → Run /wf-setup to configure
@@ -41,7 +41,7 @@ Getting Started:
   /wf-help               Show this guide
 
 Deploy:
-  /wf-deploy             Deploy any container to Willform Agent
+  /wf-deploy             Deploy any container to Willform
   /wf-template           Browse and deploy from pre-built templates
   /wf-build-push         Build Docker image and push to GHCR or Docker Hub
 
@@ -83,14 +83,14 @@ Note: Minimum runway policy — you need at least 2 hours of runway
   (balance / burn rate >= 2h) to create or expand resources.
   Error: INSUFFICIENT_RUNWAY (402). Top up credits to continue.
 
-API:      https://agent.willform.ai
-Docs:     https://agent.willform.ai/docs
+API:      https://willform.ai
+Docs:     https://willform.ai/docs
 ```
 
 ### Korean Version
 
 ```
-Willform Agent — Kubernetes 배포 CLI 플러그인
+Willform — 인프라 배포 CLI 플러그인
 
 준비물:
   1. Willform API 키     → /wf-setup 으로 설정
@@ -101,7 +101,7 @@ Willform Agent — Kubernetes 배포 CLI 플러그인
   /wf-help               이 가이드 표시
 
 배포:
-  /wf-deploy             Willform Agent에 컨테이너 배포
+  /wf-deploy             Willform에 컨테이너 배포
   /wf-template           템플릿 목록 조회 및 배포
   /wf-build-push         Docker 이미지 빌드 및 GHCR/Docker Hub 푸시
 
@@ -143,8 +143,8 @@ Willform Agent — Kubernetes 배포 CLI 플러그인
   최소 2시간의 runway(잔액 / 소비율 >= 2시간)가 필요합니다.
   오류: INSUFFICIENT_RUNWAY (402). 크레딧을 충전하세요.
 
-API:      https://agent.willform.ai
-문서:     https://agent.willform.ai/docs
+API:      https://willform.ai
+문서:     https://willform.ai/docs
 ```
 
 ### Additional Info

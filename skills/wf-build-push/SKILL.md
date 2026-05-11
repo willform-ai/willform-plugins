@@ -9,7 +9,7 @@ user-invocable: true
 
 ## Goal
 
-Build a Docker image from the current project and push it to GitHub Container Registry (GHCR) or Docker Hub for deployment on Willform Agent.
+Build a Docker image from the current project and push it to GitHub Container Registry (GHCR) or Docker Hub for deployment on Willform.
 
 ## Language
 
@@ -154,7 +154,7 @@ Docker Hub requires lowercase image names. Apply this normalization for both reg
 docker build --platform linux/amd64 -t ${IMAGE_REF} .
 ```
 
-The `--platform linux/amd64` flag is required because Willform Agent runs on EKS with amd64 nodes. This ensures the image works regardless of the build machine architecture.
+The `--platform linux/amd64` flag is required because Willform expects linux/amd64 images. This ensures the image works regardless of the build machine architecture.
 
 If the build fails, show the error output to the user. Common issues:
 - Missing build dependencies
@@ -191,7 +191,7 @@ Then output the result with registry-specific deploy guidance:
 Image pushed successfully: ghcr.io/{owner}/{repo}:{tag}
 
 Deploy with:
-  /wf-deploy  (deploy to Willform Agent)
+  /wf-deploy  (deploy to Willform)
 
 Image reference (copy this): ghcr.io/{owner}/{repo}:{tag}
 
@@ -208,7 +208,7 @@ registryAuth (for Willform deploy API):
 Image pushed successfully: docker.io/{username}/{repo}:{tag}
 
 Deploy with:
-  /wf-deploy  (deploy to Willform Agent)
+  /wf-deploy  (deploy to Willform)
 
 Image reference (copy this): docker.io/{username}/{repo}:{tag}
 

@@ -1,13 +1,13 @@
 ---
 name: wf-cost
-description: Check credit balance and estimate costs on Willform Agent
+description: Check credit balance and estimate costs on Willform
 allowed-tools: Bash, Read
 user-invocable: true
 ---
 
 # /wf-cost -- Credit Balance & Cost Estimator
 
-Check the current credit balance and estimate burn rate for all running deployments on Willform Agent.
+Check the current credit balance and estimate burn rate for all running deployments on Willform.
 
 ## Language
 

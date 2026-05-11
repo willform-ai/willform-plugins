@@ -1,6 +1,6 @@
 ---
 name: wf-domain
-description: Manage custom domains and external access on Willform Agent
+description: Manage custom domains and external access on Willform
 allowed-tools: Bash, Read, AskUserQuestion
 user-invocable: true
 ---
@@ -9,7 +9,7 @@ user-invocable: true
 
 ## Goal
 
-Expose deployments, add custom domains, verify DNS, and manage external access on Willform Agent.
+Expose deployments, add custom domains, verify DNS, and manage external access on Willform.
 
 ## Language
 

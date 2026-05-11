@@ -1,14 +1,14 @@
 ---
 name: wf-setup
-description: Configure Willform Agent API key and base URL
+description: Configure Willform API key and base URL
 allowed-tools: Bash, Read, Write, AskUserQuestion
 user-invocable: true
 ---
 
-# /wf-setup -- Willform Agent API Key Setup
+# /wf-setup -- Willform API Key Setup
 
 ## Goal
-Save the user's Willform Agent API key and preferences to `~/.claude/willform-plugins.local.md` so all `/wf-*` commands can authenticate and localize automatically.
+Save the user's Willform API key and preferences to `~/.claude/willform-plugins.local.md` so all `/wf-*` commands can authenticate and localize automatically.
 
 ## Language
 
@@ -24,12 +24,12 @@ This skill handles language selection directly in Step 2 below (since it creates
    - If already configured, offer to keep current or change
 
 3. Ask the user for their API key using AskUserQuestion:
-   - Question: "Enter your Willform Agent API key (wf_sk_...)"
+   - Question: "Enter your Willform API key (wf_sk_...)"
    - If they already have one configured, offer to keep current or replace
 
 4. Validate the key format: must start with `wf_sk_`
 
-5. Ask for base URL (default: `https://agent.willform.ai`). Most users should keep the default.
+5. Ask for base URL (default: `https://willform.ai`). Most users should keep the default.
 
 6. Write the config file:
 

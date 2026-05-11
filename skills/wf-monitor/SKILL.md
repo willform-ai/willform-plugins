@@ -1,6 +1,6 @@
 ---
 name: wf-monitor
-description: Monitor deployment health and diagnose issues on Willform Agent
+description: Monitor deployment health and diagnose issues on Willform
 allowed-tools: Bash, Read
 user-invocable: true
 ---
@@ -9,7 +9,7 @@ user-invocable: true
 
 ## Goal
 
-Check deployment health, diagnose common issues, and provide actionable troubleshooting for deployments on Willform Agent.
+Check deployment health, diagnose common issues, and provide actionable troubleshooting for deployments on Willform.
 
 ## Language
 

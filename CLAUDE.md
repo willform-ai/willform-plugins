@@ -1,6 +1,6 @@
 # Willform Plugins
 
-Claude Code plugin for Willform Agent — deploy, monitor, and manage K8s workloads from the CLI.
+Claude Code plugin for Willform — deploy, monitor, and manage workloads from the CLI.
 
 ## Repository
 
@@ -67,7 +67,7 @@ scripts/
 - User config stored in `~/.claude/willform-plugins.local.md` (gitignored via `*.local.md`)
 - Config fields: `api_key`, `base_url`, `language` (en/ko)
 - Language: Each skill checks `WF_LANGUAGE` from config (en/ko)
-- API base URL default: `https://agent.willform.ai`
+- API base URL default: `https://willform.ai`
 - Auth header: `Authorization: Bearer wf_sk_*`
 
 ## Plugin Architecture
@@ -93,5 +93,5 @@ scripts/
 
 ## Related Project
 
-- Willform Agent (`~/Projects/willform-agent`): The platform this plugin targets (has MCP server at /api/mcp)
-- REST API: All skills use `wf-api.sh` helper to call `https://agent.willform.ai` endpoints
+- Willform Platform (`~/Projects/willform/willform-platform`): The platform this plugin targets (has MCP server at /api/mcp)
+- REST API: All skills use `wf-api.sh` helper to call `https://willform.ai` endpoints

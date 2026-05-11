@@ -1,13 +1,13 @@
 ---
 name: wf-logs
-description: View deployment logs from Willform Agent
+description: View deployment logs from Willform
 allowed-tools: Bash, Read
 user-invocable: true
 ---
 
 # /wf-logs -- View Deployment Logs
 
-Retrieve and display container logs for a deployment on Willform Agent.
+Retrieve and display container logs for a deployment on Willform.
 
 ## Language
 

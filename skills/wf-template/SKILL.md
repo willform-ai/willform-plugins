@@ -1,6 +1,6 @@
 ---
 name: wf-template
-description: Browse and deploy from templates on Willform Agent
+description: Browse and deploy from templates on Willform
 allowed-tools: Bash, Read, AskUserQuestion
 user-invocable: true
 ---
@@ -9,7 +9,7 @@ user-invocable: true
 
 ## Goal
 
-Browse available deployment templates and deploy directly from a template on Willform Agent. Templates are stored in the `willform-ai/willform-templates` GitHub repo and provide pre-configured settings for common applications.
+Browse available deployment templates and deploy directly from a template on Willform. Templates are stored in the `willform-ai/willform-templates` GitHub repo and provide pre-configured settings for common applications.
 
 ## Language
 

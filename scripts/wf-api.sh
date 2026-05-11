@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Shared API helper for Willform Agent.
+# Shared API helper for Willform.
 # Source this file from skills, then call the helpers below.
 #
 # REST:  wf_get, wf_post, wf_put, wf_delete — standard CRUD endpoints
@@ -16,7 +16,7 @@ set -euo pipefail
 # ── Config loading ────────────────────────────────────────────────────────────
 
 _WF_CONFIG_FILE="${HOME}/.claude/willform-plugins.local.md"
-_WF_DEFAULT_BASE_URL="https://agent.willform.ai"
+_WF_DEFAULT_BASE_URL="https://willform.ai"
 
 wf_load_config() {
   if [[ -z "${WF_API_KEY:-}" ]] && [[ -f "$_WF_CONFIG_FILE" ]]; then

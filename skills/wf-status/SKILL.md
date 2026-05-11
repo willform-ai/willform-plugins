@@ -1,13 +1,13 @@
 ---
 name: wf-status
-description: Check deployment status on Willform Agent
+description: Check deployment status on Willform
 allowed-tools: Bash, Read
 user-invocable: true
 ---
 
 # /wf-status -- Check Deployment Status
 
-Check the status of deployments on Willform Agent.
+Check the status of deployments on Willform.
 
 ## Language
 

@@ -21,7 +21,7 @@ fi
 
 api_key=$(sed -n 's/^api_key:[[:space:]]*//p' "$config_file" | tr -d '[:space:]')
 base_url=$(sed -n 's/^base_url:[[:space:]]*//p' "$config_file" | tr -d '[:space:]')
-base_url="${base_url:-https://agent.willform.ai}"
+base_url="${base_url:-https://willform.ai}"
 
 if [[ -z "$api_key" ]]; then
   echo "Willform: api_key is empty in config. Run /wf-setup to reconfigure."
@@ -40,7 +40,7 @@ http_code=$(curl -s -o /dev/null -w '%{http_code}' \
   "${base_url}/api/health" 2>/dev/null || echo "000")
 
 if [[ "$http_code" == "200" ]]; then
-  echo "Willform Agent connected (${base_url})"
+  echo "Willform connected (${base_url})"
 else
   echo "Willform: Cannot reach ${base_url} (HTTP ${http_code}). Check network or base_url."
 fi

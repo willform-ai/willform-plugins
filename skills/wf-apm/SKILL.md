@@ -1,6 +1,6 @@
 ---
 name: wf-apm
-description: Deploy MCP servers declared in apm.yml to Willform Agent (Microsoft APM integration)
+description: Deploy MCP servers declared in apm.yml to Willform (Microsoft APM integration)
 allowed-tools: Bash, Read, Write, AskUserQuestion
 user-invocable: true
 ---
@@ -9,7 +9,7 @@ user-invocable: true
 
 ## Goal
 
-Parse an `apm.yml` manifest (Microsoft Agent Package Manager format) and deploy each self-defined MCP server to Willform Agent as a `web` chart deployment. Returns the live MCP endpoint URLs.
+Parse an `apm.yml` manifest (Microsoft Agent Package Manager format) and deploy each self-defined MCP server to Willform as a `web` chart deployment. Returns the live MCP endpoint URLs.
 
 Supports:
 - `--apm-file <path>` — path to apm.yml (default: `./apm.yml`)
